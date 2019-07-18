@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="25" failures="1" time="6.954">
+  <testsuite name="&lt;Button /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:56" time="0.732" tests="3">
+    <testcase classname="&lt;Button /&gt; should render the Button component correctly" name="&lt;Button /&gt; should render the Button component correctly" time="0.027">
+    </testcase>
+    <testcase classname="&lt;Button /&gt; should display Login as button text" name="&lt;Button /&gt; should display Login as button text" time="0.001">
+    </testcase>
+    <testcase classname="&lt;Button /&gt; should pass since button exists" name="&lt;Button /&gt; should pass since button exists" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Root Reducer" errors="0" failures="1" skipped="0" timestamp="2019-07-18T18:21:56" time="0.747" tests="1">
+    <testcase classname="Root Reducer should return initial state" name="Root Reducer should return initial state" time="0.012">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+- Expected
++ Received
+
+  Object {
+    &quot;auth&quot;: Object {},
++   &quot;commentErrors&quot;: Object {},
++   &quot;comments&quot;: Object {
++     &quot;comment&quot;: Object {},
++     &quot;comments&quot;: Array [],
++     &quot;likes&quot;: null,
++   },
+  }
+    at Object.toEqual (/Users/gerrardezeugwa/Desktop/projects/Temporarily-Deploy-Author-App/__test__/reducers/rootReducer.test.js:8:23)
+    at Object.asyncJestTest (/Users/gerrardezeugwa/Desktop/projects/Temporarily-Deploy-Author-App/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)
+    at resolve (/Users/gerrardezeugwa/Desktop/projects/Temporarily-Deploy-Author-App/node_modules/jest-jasmine2/build/queueRunner.js:43:12)
+    at new Promise (&lt;anonymous&gt;)
+    at mapper (/Users/gerrardezeugwa/Desktop/projects/Temporarily-Deploy-Author-App/node_modules/jest-jasmine2/build/queueRunner.js:26:19)
+    at promise.then (/Users/gerrardezeugwa/Desktop/projects/Temporarily-Deploy-Author-App/node_modules/jest-jasmine2/build/queueRunner.js:73:41)
+    at process._tickCallback (internal/process/next_tick.js:68:7)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Routes" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:56" time="1.345" tests="3">
+    <testcase classname="Routes should render index page" name="Routes should render index page" time="0.206">
+    </testcase>
+    <testcase classname="Routes should render not found page" name="Routes should render not found page" time="0.029">
+    </testcase>
+    <testcase classname="Routes should render the Routes component correctly" name="Routes should render the Routes component correctly" time="0.018">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Modal /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:57" time="0.401" tests="2">
+    <testcase classname="&lt;Modal /&gt; should render a modal correctly" name="&lt;Modal /&gt; should render a modal correctly" time="0.09">
+    </testcase>
+    <testcase classname="&lt;Modal /&gt; should exit the toggle when exit is clicked" name="&lt;Modal /&gt; should exit the toggle when exit is clicked" time="0.01">
+    </testcase>
+  </testsuite>
+  <testsuite name="Render Input" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:57" time="0.378" tests="4">
+    <testcase classname="Render Input should render the RenderInput component when used" name="Render Input should render the RenderInput component when used" time="0.031">
+    </testcase>
+    <testcase classname="Render Input should call onChange prop" name="Render Input should call onChange prop" time="0.079">
+    </testcase>
+    <testcase classname="Render Input should call onFocus prop" name="Render Input should call onFocus prop" time="0.008">
+    </testcase>
+    <testcase classname="Render Input should show validation error" name="Render Input should show validation error" time="0.005">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Home /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:57" time="0.29" tests="1">
+    <testcase classname="&lt;Home /&gt; should render the Home component correctly" name="&lt;Home /&gt; should render the Home component correctly" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Preloader /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:57" time="0.259" tests="2">
+    <testcase classname="&lt;Preloader /&gt; should render a preloader with type ~ button" name="&lt;Preloader /&gt; should render a preloader with type ~ button" time="0.005">
+    </testcase>
+    <testcase classname="&lt;Preloader /&gt; should render a preloader with type ~ main-page" name="&lt;Preloader /&gt; should render a preloader with type ~ main-page" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="SAMPLE TEST" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:57" time="0.481" tests="2">
+    <testcase classname="SAMPLE TEST should return a successful sample test " name="SAMPLE TEST should return a successful sample test " time="0.001">
+    </testcase>
+    <testcase classname="App should render the App component correctly" name="App should render the App component correctly" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;NavBar /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:58" time="0.186" tests="1">
+    <testcase classname="&lt;NavBar /&gt; should render the NavBar component correctly" name="&lt;NavBar /&gt; should render the NavBar component correctly" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Login /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:58" time="0.257" tests="2">
+    <testcase classname="&lt;Login /&gt; should display this is the login page" name="&lt;Login /&gt; should display this is the login page" time="0.003">
+    </testcase>
+    <testcase classname="&lt;Login /&gt; should render the Login component correctly" name="&lt;Login /&gt; should render the Login component correctly" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Header /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:58" time="0.225" tests="1">
+    <testcase classname="&lt;Header /&gt; should render the Header component correctly" name="&lt;Header /&gt; should render the Header component correctly" time="0.012">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Footer /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:58" time="0.163" tests="1">
+    <testcase classname="&lt;Footer /&gt; should display footer message" name="&lt;Footer /&gt; should display footer message" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;NotFound /&gt;" errors="0" failures="0" skipped="0" timestamp="2019-07-18T18:21:58" time="0.147" tests="2">
+    <testcase classname="&lt;NotFound /&gt; should display this page is not found" name="&lt;NotFound /&gt; should display this page is not found" time="0.003">
+    </testcase>
+    <testcase classname="&lt;NotFound /&gt; should render the NotFound component correctly" name="&lt;NotFound /&gt; should render the NotFound component correctly" time="0.002">
+    </testcase>
+  </testsuite>
+</testsuites>
