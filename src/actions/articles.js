@@ -101,14 +101,13 @@ export const editArticle = (id, data, history) => async (dispatch) => {
     const response = await axios.put(`/articles/${id}`, data);
     history.push(`/article/${id}`);
     toast.success('Article updated!');
-    console.log(response);
     dispatch(editArticleSuccess(response.data.payload));
   } catch (error) {
     dispatch(editArticleFailure(error.response.data.errors.global));
   }
 }
 
-export const getAllArticles = () => async (dispatch) => {
+export const fetchArticles = () => async (dispatch) => {
   try {
     dispatch(isLoading);
 

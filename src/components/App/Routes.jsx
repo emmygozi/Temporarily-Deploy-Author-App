@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from '@components/views/Login';
-import NotFound from '@components/views/NotFound';
 import SingleArticle from '../../containers/views/Article/SingleArticle';
 import EditArticle from '../../containers/views/Article/EditArticle';
-import Home from '../../containers/views/Home';
 import NewArticle from '../../containers/views/Article/NewArticle';
+import Home from '@components/views/Home';
+import NotFound from '@components/views/NotFound';
 
 const Routes = () => (
   <Router>
@@ -15,7 +15,7 @@ const Routes = () => (
       <Route exact path="/new-article" component={NewArticle} />
       <Route exact path="/article/:articleId" component={SingleArticle} />
       <Route exact path="/article/:articleId/edit" component={EditArticle} />
-      <Route path="/" component={NotFound} />
+      <Route path="*" component={NotFound} />
     </Switch>
   </Router>
 );
