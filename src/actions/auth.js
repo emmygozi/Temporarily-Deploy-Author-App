@@ -11,7 +11,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE
 } from './types';
-import fetchArticles from './articles';
+import { fetchArticles } from './articles';
 
 // axios.defaults.baseURL =
 //   'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
