@@ -7,7 +7,7 @@ export function CreateCommentCard({
   name, avatar, alt, value, onSubmit, onChange, commentError, submit, reset
 }) {
   return (
-    <div className="px-auto m-12 p-1 bg-gray-200">
+    <div className="px-auto my-4 p-1 bg-gray-200">
       <div className="w-full">
         <div className="border-r border-b border-l border-gray-400 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
           <div className="flex items-center mb-4">
@@ -19,7 +19,7 @@ export function CreateCommentCard({
           {commentError && (<Alert alertBody={commentError} />)}
           <form className="rounded" onSubmit={onSubmit}>
             <div className="mb-2">
-              <textarea className="resize appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="comment" rows="6" type="text" placeholder="What's on your mind?" value={value} onChange={onChange} />
+              <textarea className="resize appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="comment" rows="4" type="text" placeholder="What's on your mind?" value={value} onChange={onChange} />
             </div>
             <div className="flex justify-end">
               <Button type='outlined' color='blue' onClick={submit}>Comment</Button>

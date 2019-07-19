@@ -10,7 +10,7 @@ export function CommentCard({
   // like, unlike
 }) {
   return (
-    <div className="px-auto m-12 p-1 bg-gray-200">
+    <div className="px-auto my-4 p-1 bg-gray-200">
       <div className="w-full">
         <div className="border-r border-b border-l border-gray-400 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
           <div className="flex mb-4">
@@ -28,7 +28,7 @@ export function CommentCard({
             <p className="text-gray-700 text-base">{body}</p>
           </div>
           <div className="text-bg ml-auto">
-            <FontAwesome type={faTrashAlt} onClick={del} />
+            <FontAwesome type={faTrashAlt} onClick={del} styleClass="cursor-pointer" />
           </div>
         </div>
       </div>
