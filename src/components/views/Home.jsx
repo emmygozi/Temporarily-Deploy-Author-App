@@ -84,10 +84,7 @@ Home.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   errors: PropTypes.shape({}).isRequired,
   fetchArticles: PropTypes.func.isRequired,
-  articles: PropTypes.oneOfType([
-    PropTypes.object,
-    PropTypes.shape([])
-  ]).isRequired,
+  articles: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
