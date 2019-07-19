@@ -141,12 +141,6 @@ class Signup extends Component {
             Sign In
           </Button>
         </div>
-        <div className="text-xs md:text-base my-4">
-          <span>Can&lsquo;t remember password?</span>
-          <Button type="regular" onClick={() => {}} color="blue">
-            Reset password
-          </Button>
-        </div>
         <span className="text-xs md:text-base lg:text-base text-gray-700">
           Click “Register” above to accept Author’s Haven We
           hope you have a pleasant read/write
