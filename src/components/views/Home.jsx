@@ -5,7 +5,6 @@ import Header from '@components/commons/Header';
 import NavBar from '@components/commons/NavBar';
 import ArticleCard from '@components/commons/Cards/Article';
 import { fetchArticles } from '@actions/articles';
-import Preloader from '@components/commons/Preloader';
 
 class Home extends Component {
   constructor(props) {
@@ -40,7 +39,7 @@ class Home extends Component {
   };
 
   render() {
-    const { user, profile, isAuthenticated, articles, isLoading } = this.props;
+    const { user, profile, isAuthenticated, articles } = this.props;
 
     const mainArticle = articles.splice(0, 1);
     const subArticles = articles.splice(0, 3);
@@ -53,17 +52,7 @@ class Home extends Component {
           profile={profile}
         />
         <NavBar />
-        {isLoading ? (
-          <Preloader
-            type='page'
-            height={100}
-            width={100}
-            styles='TailSpin'
-            color='blue'
-          />
-        ) : (
-          ''
-        )}
+
         <div className='container mx-auto mt-6 p-4'>
           <div className='flex flex-col md:flex-row max-h-lg'>
             <div>
@@ -99,7 +88,6 @@ Home.propTypes = {
     PropTypes.object,
     PropTypes.shape([])
   ]).isRequired,
-  isLoading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -108,7 +96,6 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   errors: state.auth.errors,
   articles: state.article.articles,
-  isLoading: state.article.loading
 });
 
 export default connect(

@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import Gravatar from '@base/img/article.jpg';
 import { formatDate } from '@utils/helpers';
 
-const calculateRT = text => {
-  const wordsPerMinute = 100;
+export const calculateRT = (text, wordsPerMinute = 100) => {
   let result = '< 1 min';
 
   let textLength = text.split(' ').length;
