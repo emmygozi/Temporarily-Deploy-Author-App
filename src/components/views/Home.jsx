@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Header from '@components/commons/Header';
 import NavBar from '@components/commons/NavBar';
 import ArticleCard from '@components/commons/Cards/Article';
-import fetchArticles from '@actions/articles';
+import { fetchArticles } from '@actions/articles';
 import Preloader from '@components/commons/Preloader';
 
 class Home extends Component {
@@ -95,7 +95,7 @@ Home.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   errors: PropTypes.shape({}).isRequired,
   fetchArticles: PropTypes.func.isRequired,
-  articles: PropTypes.shape([]).isRequired,
+  articles: PropTypes.arrayOf.isRequired,
   isLoading: PropTypes.bool.isRequired
 };
 
@@ -105,7 +105,7 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   errors: state.auth.errors,
   articles: state.article.articles,
-  isLoading: state.article.isLoading
+  isLoading: state.article.loading
 });
 
 export default connect(

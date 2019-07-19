@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import auth from './auth';
 import comments from './comments';
 import commentErrors from './commentErrors';
-import articles from './articles';
+import article from './articles';
 
 const authPersistConfig = {
   key: 'auth',
@@ -14,8 +14,8 @@ const authPersistConfig = {
 
 const appReducer = combineReducers({
   auth: persistReducer(authPersistConfig, auth),
-  article: articles,
   commentErrors,
+  article,
   comments
 });
 

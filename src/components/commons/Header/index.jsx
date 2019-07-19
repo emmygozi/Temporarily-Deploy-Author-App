@@ -208,7 +208,7 @@ export class Header extends Component {
                   Profile
                 </Link>
                 <Link
-                  to='/articles'
+                  to='/new-article'
                   className='block border-b pb-2 pt-2 hover:text-blue-700'
                 >
                   New Article
