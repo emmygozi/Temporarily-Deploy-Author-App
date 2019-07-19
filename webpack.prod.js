@@ -10,7 +10,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const baseConfig = require('./webpack.base.js');
 
 module.exports = merge(baseConfig, {
-  bail: false,
+  bail: true,
   optimization: {
     splitChunks: {
       chunks: 'async',
@@ -42,10 +42,10 @@ module.exports = merge(baseConfig, {
       }),
       new OptimizeCssAssetsPlugin({
         cssProcessorOptions: {
-          zindex: false
-        }
-      })
-    ]
+          zindex: false,
+        },
+      }),
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -75,8 +75,7 @@ module.exports = merge(baseConfig, {
     }),
     new LodashModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'stylesheets/[name].[hash].css',
-      allChunks: true
+      filename: 'stylesheets/[name].[hash].css', allChunks: true
     }),
     new CompressionPlugin({
       filename: '[path].gz[query]',
