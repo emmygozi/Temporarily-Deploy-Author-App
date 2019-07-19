@@ -21,10 +21,7 @@ class SingleArticle extends PureComponent {
       title: PropTypes.string,
       body: PropTypes.string,
       createdAt: PropTypes.string,
-      averageRating: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-      ]),
+      averageRating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       author: PropTypes.shape({
         username: PropTypes.string.isRequired,
         profile: PropTypes.shape({
@@ -36,17 +33,21 @@ class SingleArticle extends PureComponent {
     }).isRequired,
     getSingleArticle: PropTypes.func.isRequired,
     getAllTags: PropTypes.func.isRequired
-  }
+  };
 
   constructor(props) {
     super(props);
 
     this.defaultAvatar =
-     "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png";
+      'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
   }
 
   componentDidMount() {
-    const { match: { params: {articleId} } } = this.props;
+    const {
+      match: {
+        params: { articleId }
+      }
+    } = this.props;
     const { getSingleArticle, getAllTags } = this.props;
     getSingleArticle(articleId);
     getAllTags(articleId);
@@ -57,40 +58,61 @@ class SingleArticle extends PureComponent {
       return;
     }
     return convertToJSON(JSON.parse(raw));
-  }
+  };
 
   render() {
     const { article, tags } = this.props;
-    const body = this.getArticleBody(article.body);
-    
+
+    let body;
+    if (article) {
+      body = this.getArticleBody(article.body);
+    }
+
     return (
-      <PageLayout>
-        <div className="content-area mx-auto mt-8">
-          <h2 className="text-3xl font-semibold title tracking-wider">{article.title}</h2>
+      <div>
+        {article ? (
+          <PageLayout>
+            <div className='content-area mx-auto mt-8'>
+              <h2 className='text-3xl font-semibold title tracking-wider'>
+                {article.title}
+              </h2>
 
-          <div className="my-8 flex items-center">
-            <img className="w-20 h-20 rounded-full mr-4" src={article.author.profile.avatar || this.defaultAvatar} alt="Avatar of Jonathan Reinink" />
-            <div className="ml-4">
-              <h4 className="text-base">{article.author.username.toUpperCase()}</h4>
-              <div className="flex items-center text-sm text-gray-600">
-                <p>{moment(article.createdAt).format("MMM DD, YYYY")}</p>
-                <span className="mx-3 text-lg text-black my-auto">.</span>
-                <p>{`${calculateRT(body, 400)} read`}</p>
+              <div className='my-8 flex items-center'>
+                <img
+                  className='w-20 h-20 rounded-full mr-4'
+                  src={article.author.profile.avatar || this.defaultAvatar}
+                  alt='Avatar of Jonathan Reinink'
+                />
+                <div className='ml-4'>
+                  <h4 className='text-base'>
+                    {article.author.username.toUpperCase()}
+                  </h4>
+                  <div className='flex items-center text-sm text-gray-600'>
+                    <p>{moment(article.createdAt).format('MMM DD, YYYY')}</p>
+                    <span className='mx-3 text-lg text-black my-auto'>.</span>
+                    <p>{`${calculateRT(body, 400)} read`}</p>
+                  </div>
+                  <ArticleRating
+                    averageRating={
+                      article.averageRating ? article.averageRating : 0
+                    }
+                  />
+                </div>
               </div>
-              <ArticleRating averageRating={article.averageRating ? article.averageRating : 0} />
+
+              <div className='text-lg body'>{ReactHtmlParser(body)}</div>
+
+              <div className='py-5 border-b-2'>
+                <Tags tags={tags} />
+              </div>
             </div>
-          </div>
-
-          <div className="text-lg body">{ ReactHtmlParser(body) }</div>
-
-          <div className="py-5 border-b-2">
-            <Tags tags={tags} />
-          </div>
-        </div>
-      </PageLayout>
-    )
+          </PageLayout>
+        ) : (
+          ''
+        )}
+      </div>
+    );
   }
 }
 
 export default SingleArticle;
-
