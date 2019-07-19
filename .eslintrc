@@ -44,6 +44,7 @@
     "no-unused-expressions": 0,
     "no-useless-escape": 0,
     "react/prop-types": 0,
+    "react/forbid-prop-types": 0,
     "curly": [
       "error",
       "multi-line"
