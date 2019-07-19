@@ -76,6 +76,10 @@ input {
   outline: none;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 .tooltip {
   &.container {
     animation: flip 1000ms linear normal infinite;
@@ -96,18 +100,4 @@ input {
   100% {
     transform: rotate(360deg);
   }
-}
-
-svg.svg-inline--fa.fa-heart.fa-w-16.fa.fa-edit.mr-2.text-gray-700 {
-  color: red !important
-}
-
-svg.svg-inline--fa:hover {
-  color: red;
-  cursor: pointer;
-  font-size: 20px
-}
-
-.clear{
-  display: none;
 }

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import axios from "axios";
+import { toast } from "react-toastify";
 import {
   IS_LOADING,
   ADD_ARTICLE_SUCCESS,
@@ -12,10 +12,9 @@ import {
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
   GET_TAGS_FAILURE
-} from './types';
+} from "./types";
 
-
-axios.defaults.baseURL = 'http://localhost:3000/api/v1';
+axios.defaults.baseURL = "http://localhost:3000/api/v1";
 
 export const isLoading = () => ({
   type: IS_LOADING
@@ -81,57 +80,57 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
-export const createNewArticle = (data, history) => async (dispatch) => {
+export const createNewArticle = (data, history) => async dispatch => {
   try {
     dispatch(isLoading());
 
-    const response = await axios.post('/articles', data);
+    const response = await axios.post("/articles", data);
     dispatch(addArticleSuccess(response.data.payload));
-    toast.success('Article Published');
+    toast.success("Article Published");
     history.push(`/article/${response.data.payload.slug}`);
   } catch (error) {
     dispatch(addArticleFailure(error.response.data.errors));
   }
-}
+};
 
-export const editArticle = (id, data, history) => async (dispatch) => {
+export const editArticle = (id, data, history) => async dispatch => {
   try {
     dispatch(isLoading());
 
     const response = await axios.put(`/articles/${id}`, data);
     history.push(`/article/${id}`);
-    toast.success('Article updated!');
+    toast.success("Article updated!");
     dispatch(editArticleSuccess(response.data.payload));
   } catch (error) {
     dispatch(editArticleFailure(error.response.data.errors.global));
   }
-}
+};
 
-export const fetchArticles = () => async (dispatch) => {
+export const fetchArticles = () => async dispatch => {
   try {
-    dispatch(isLoading);
+    dispatch(isLoading());
 
-    const response = await axios.get('/articles');
+    const response = await axios.get("/articles");
 
     dispatch(fetchArticlesSuccess(response.data.payload.rows));
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
   }
-}
+};
 
-export const getAllTags = (slug) => async (dispatch) => {
+export const getAllTags = slug => async dispatch => {
   try {
-    dispatch(isLoading);
+    dispatch(isLoading());
 
-    const response = await axios.get('/tags');
+    const response = await axios.get("/tags");
     const result = response.data.payload.filter(item => item.slug === slug);
     dispatch(getTagsSuccess(result[0].tags));
   } catch (error) {
     dispatch(getTagsFailure(error.response.data.errors.global));
   }
-}
+};
 
-export const getSingleArticle = id => async (dispatch) => {
+export const getSingleArticle = id => async dispatch => {
   try {
     dispatch(isLoading);
 
@@ -141,9 +140,9 @@ export const getSingleArticle = id => async (dispatch) => {
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
-}
+};
 
-export const deleteArticle = id => async (dispatch) => {
+export const deleteArticle = id => async dispatch => {
   try {
     dispatch(isLoading);
 
@@ -153,4 +152,4 @@ export const deleteArticle = id => async (dispatch) => {
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
   }
-}
+};

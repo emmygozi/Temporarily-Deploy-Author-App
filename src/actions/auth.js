@@ -7,7 +7,9 @@ import {
   SET_CURRENT_USER,
   IS_LOADING,
   SET_PROFILE,
-  LOGOUT_USER
+  LOGOUT_USER,
+  REGISTER_SUCCESS,
+  REGISTER_FAILURE
 } from './types';
 import fetchArticles from './articles';
 
@@ -101,4 +103,31 @@ export const loginUser = userData => async dispatch => {
     dispatch(isLoading(false));
     toast.error('Please check your network connection and try again');
   }
+};
+
+export const register = userData => dispatch => {
+  axios
+    .post("/users", userData)
+    .then(response => {
+      if (response.status === 201) {
+        localStorage.setItem("token", response.data.payload.token);
+        setAuthToken(response.data.token);
+        dispatch({ type: REGISTER_SUCCESS, payload: response.data });
+        toast.success("Registration successful");
+        return response;
+      }
+    })
+    .catch(err => {
+      dispatch({ type: REGISTER_FAILURE, payload: err.response.data });
+      if (err) {
+        const { errors } = err.response.data;
+        const { username, email } = errors;
+        if (username) {
+          toast.error(username);
+        }
+        if (email) {
+          toast.error(email);
+        }
+      }
+    });
 };
