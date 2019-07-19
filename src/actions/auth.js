@@ -108,7 +108,7 @@ export const register = userData => dispatch => {
     .then(response => {
       if (response.status === 201) {
         localStorage.setItem("token", response.data.payload.token);
-        setAuthToken(response.data.token);
+        setAuthToken(response.data.payload.token);
         dispatch({ type: REGISTER_SUCCESS, payload: response.data });
         toast.success("Registration successful");
         return response;
