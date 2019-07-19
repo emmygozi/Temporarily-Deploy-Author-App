@@ -3,7 +3,7 @@ import './index.scss';
 
 function NavBar() {
   return (
-    <div className='rounded bg-blue-700'>
+    <div className='rounded border-radius-none bg-blue-700'>
       <div className='container mx-auto max-w-6xl overflow-y-scroll'>
         <div className='flex items-center justify-center text-white h-full'>
           <ul className='mx-4'>

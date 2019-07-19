@@ -66,7 +66,7 @@ class SingleArticle extends PureComponent {
           <div className="my-8 flex items-center">
             <img className="w-20 h-20 rounded-full mr-4" src="https://tailwindcss.com/img/jonathan.jpg" alt="Avatar of Jonathan Reinink" />
             <div className="ml-4">
-              <h4 className="text-base">Malik Berry</h4>
+              <h4 className="text-base">{article.author.username.toUpperCase()}</h4>
               <div className="flex items-center text-sm text-gray-600">
                 <p>{moment(article.createdAt).format("MMM DD, YYYY")}</p>
                 <span className="mx-3 text-lg text-black my-auto">.</span>

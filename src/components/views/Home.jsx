@@ -95,7 +95,10 @@ Home.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   errors: PropTypes.shape({}).isRequired,
   fetchArticles: PropTypes.func.isRequired,
-  articles: PropTypes.arrayOf.isRequired,
+  articles: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.shape([])
+  ]).isRequired,
   isLoading: PropTypes.bool.isRequired
 };
 
