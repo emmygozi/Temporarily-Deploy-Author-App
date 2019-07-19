@@ -37,7 +37,7 @@ CreateCommentCard.propTypes = {
   avatar: PropTypes.string,
   alt: PropTypes.string,
   value: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
@@ -48,7 +48,8 @@ CreateCommentCard.defaultProps = {
   name: 'Gerrard Ezeugwa',
   avatar: 'https://tailwindcss.com/img/card-left.jpg',
   alt: 'avatar',
-  commentError: ''
+  commentError: '',
+  onSubmit: () => {}
 };
 
 export default CreateCommentCard;

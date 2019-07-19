@@ -127,9 +127,13 @@ Login.propTypes = {
     password: PropTypes.string
   }).isRequired,
   loginUser: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
+  loading: PropTypes.bool,
   showSignup: PropTypes.func.isRequired
 };
+
+Login.defaultProps = {
+  loading: false
+}
 
 const mapStateToProps = state => ({
   errors: state.auth.errors,
