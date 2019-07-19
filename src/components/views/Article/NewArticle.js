@@ -98,7 +98,7 @@ class NewArticle extends Component {
   }
 
   publishArticle = () => {
-    const { createNewArticle, history } = this.props;
+    const { createNewArticle, history, errors } = this.props;
     const { title, tags } = this.state;
 
     let articleTags = [];
@@ -115,10 +115,14 @@ class NewArticle extends Component {
             tags: articleTags
           };
 
-          if (tags.length) {
-            createNewArticle(values, history);
+          if (errors.global) {
+            toast.error(`${errors.global}`);
           } else {
-            toast.error('Minimum of 1 tags required');
+            if (tags.length) {
+              createNewArticle(values, history);
+            } else {
+              toast.error('Minimum of 1 tags required');
+            }
           }
         });
       })
@@ -197,7 +201,14 @@ class NewArticle extends Component {
 
 NewArticle.propTypes = {
   createNewArticle: PropTypes.func.isRequired,
-  history: PropTypes.shape({}).isRequired
+  history: PropTypes.shape({}).isRequired,
+  errors: PropTypes.shape({
+    global: PropTypes.string
+  })
+};
+
+NewArticle.defaultProps = {
+  errors: {}
 }
 
 export default withRouter(NewArticle);

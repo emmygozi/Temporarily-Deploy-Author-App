@@ -176,7 +176,7 @@ Signup.propTypes = {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  errors: state.auth.error.errors
+  errors: state.auth.errors
 });
 export default connect(
   mapStateToProps,

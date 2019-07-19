@@ -11,12 +11,9 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE
 } from './types';
-import fetchArticles from './articles';
+import { fetchArticles } from './articles';
 
-// axios.defaults.baseURL =
-//   'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
-
-axios.defaults.baseURL = 'http://localhost:3000/api/v1';
+axios.defaults.baseURL = 'https://kingsmen-ah-backend-stag-pr-51.herokuapp.com/api/v1';
 
 export const setAuthToken = token => {
   if (token) {

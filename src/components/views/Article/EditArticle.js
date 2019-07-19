@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
 import PageLayout from '@components/layout/PageLayout';
 import { Helmet } from 'react-helmet';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import Button from '@components/commons/utilities/Button';
-import Editor from './Editor';
+// import Editor from './Editor';
 import './index.scss';
 import '../../commons/index.scss';
 
@@ -33,7 +33,7 @@ class EditArticle extends Component {
         }).isRequired
       })
     }).isRequired,
-    loading: PropTypes.bool.isRequired,
+    // loading: PropTypes.bool.isRequired,
     getSingleArticle: PropTypes.func.isRequired
   }
   constructor(props) {
@@ -66,39 +66,39 @@ class EditArticle extends Component {
   }
 
   editArticle = () => {
-      const { match: { params: {articleId} } }= this.props;
-      const { editArticle, history } = this.props
-    const { title } = this.state;
-    this.editor.isReady
-      .then(() => {
-        this.editor.save().then((outputData) => {
-          const values = {
-            title,
-            body: JSON.stringify(outputData),
-          };
+      // const { match: { params: {articleId} } }= this.props;
+      // const { editArticle, history } = this.props
+    // const { title } = this.state;
+    // this.editor.isReady
+    //   .then(() => {
+    //     this.editor.save().then((outputData) => {
+    //       const values = {
+    //         title,
+    //         body: JSON.stringify(outputData),
+    //       };
 
-          console.log(values);
-          // editArticle(articleId, values, history);
-          // console.log(editArticle(articleId, values, history));
-        });
-      })
-      .catch(() => {
-        toast.error('Please check your internet connection!');
-      });
+    //       console.log(values);
+    //       editArticle(articleId, values, history);
+    //       console.log(editArticle(articleId, values, history));
+    //     });
+    //   })
+    //   .catch(() => {
+    //     toast.error('Please check your internet connection!');
+    //   });
   }
 
   render() {
     const { title } = this.state;
-    const { article, loading } = this.props;
-    const body = this.getBodyObject(article.body);
+    const { article } = this.props;
+    // const body = this.getBodyObject(article.body);
     
-    if (!this.editor && !loading) {
-      this.editor = Editor(body);
-      console.log('Instantiating')
-    } else {
-      console.log(loading);
-      return;
-    }
+    // if (!this.editor && !loading) {
+    //   this.editor = Editor(body);
+    //   console.log('Instantiating')
+    // } else {
+    //   console.log(loading);
+    //   return;
+    // }
 
     return (
       <PageLayout>

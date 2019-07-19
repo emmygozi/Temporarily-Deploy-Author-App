@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Tags from '@components/commons/Cards/Tags';
+import { calculateRT } from '@components/commons/Cards/Article';
 import ReactHtmlParser from 'react-html-parser';
 import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
@@ -28,7 +29,8 @@ class SingleArticle extends PureComponent {
         username: PropTypes.string.isRequired,
         profile: PropTypes.shape({
           firstname: PropTypes.string,
-          lastname: PropTypes.string
+          lastname: PropTypes.string,
+          avatar: PropTypes.string
         }).isRequired
       })
     }).isRequired,
@@ -38,6 +40,9 @@ class SingleArticle extends PureComponent {
 
   constructor(props) {
     super(props);
+
+    this.defaultAvatar =
+     "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png";
   }
 
   componentDidMount() {
@@ -64,13 +69,13 @@ class SingleArticle extends PureComponent {
           <h2 className="text-3xl font-semibold title tracking-wider">{article.title}</h2>
 
           <div className="my-8 flex items-center">
-            <img className="w-20 h-20 rounded-full mr-4" src="https://tailwindcss.com/img/jonathan.jpg" alt="Avatar of Jonathan Reinink" />
+            <img className="w-20 h-20 rounded-full mr-4" src={article.author.profile.avatar || this.defaultAvatar} alt="Avatar of Jonathan Reinink" />
             <div className="ml-4">
-              <h4 className="text-base">Malik Berry</h4>
+              <h4 className="text-base">{article.author.username.toUpperCase()}</h4>
               <div className="flex items-center text-sm text-gray-600">
                 <p>{moment(article.createdAt).format("MMM DD, YYYY")}</p>
                 <span className="mx-3 text-lg text-black my-auto">.</span>
-                <p>1 mins read</p>
+                <p>{`${calculateRT(body, 400)} read`}</p>
               </div>
               <ArticleRating averageRating={article.averageRating ? article.averageRating : 0} />
             </div>
