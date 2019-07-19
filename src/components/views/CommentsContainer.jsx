@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -25,7 +25,7 @@ export class CommentsContainer extends Component {
   }
 
   componentDidMount() {
-    const slug = 'new-article-b7a1a384';
+    const { slug } = this.props;
     const { getComments: loadComments } = this.props;
     loadComments(slug);
   }
@@ -54,7 +54,7 @@ export class CommentsContainer extends Component {
    */
   onSubmit = (e) => {
     e.preventDefault();
-    const slug = 'new-article-b7a1a384';
+    const { slug } = this.props;
     const err = this.validate();
     if (!err) {
       const { comment } = this.state;
@@ -118,7 +118,7 @@ export class CommentsContainer extends Component {
    * @memberof CommentsContainer
    */
   deleteComment(id) {
-    const slug = 'new-article-b7a1a384';
+    const { slug } = this.props;
     const { delComment } = this.props;
     delComment(id, slug);
   }
@@ -129,7 +129,7 @@ export class CommentsContainer extends Component {
    * @memberof CommentsContainer
    */
   likeComment(id) {
-    const slug = 'new-article-b7a1a384';
+    const { slug } = this.props;
     const { likeComment } = this.props;
     likeComment(id, slug);
   }
@@ -146,15 +146,15 @@ export class CommentsContainer extends Component {
   }
 
   render() {
-    const { comments } = this.props;
+    const { comments, user } = this.props;
     const { comment, errors } = this.state;
 
     const data = this.createCommentListings(comments);
 
     return (
-      <div className="lg:ml-64 lg:mr-64">
+      <Fragment>
         <CreateCommentCard
-          name='Test Name'
+          name={user.username}
           onChange={this.onChange}
           submit={this.onSubmit}
           reset={this.clearComment}
@@ -163,7 +163,7 @@ export class CommentsContainer extends Component {
         />
         {data}
         <Footer />
-      </div>
+      </Fragment>
     );
   }
 }
@@ -172,6 +172,10 @@ CommentsContainer.propTypes = {
   comments: PropTypes.arrayOf(PropTypes.shape({
 
   })).isRequired,
+  user: PropTypes.shape({
+    username: PropTypes.string,
+  }).isRequired,
+  slug: PropTypes.string.isRequired,
   getComments: PropTypes.func.isRequired,
   postComment: PropTypes.func.isRequired,
   delComment: PropTypes.func.isRequired,
@@ -180,7 +184,8 @@ CommentsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  comments: state.comments.comments
+  comments: state.comments.comments,
+  user: state.auth.user 
 });
 
 export default connect(mapStateToProps, { getComments, postComment, delComment, likeComment, unlikeComment })(withRouter(CommentsContainer));

@@ -8,6 +8,7 @@ import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
 import convertToJSON from '../../../helpers/convertToJSON';
 import './index.scss';
+import CommentsContainer from '../CommentsContainer';
 
 class SingleArticle extends PureComponent {
   static propTypes = {
@@ -20,6 +21,7 @@ class SingleArticle extends PureComponent {
     article: PropTypes.shape({
       title: PropTypes.string,
       body: PropTypes.string,
+      slug: PropTypes.string,
       createdAt: PropTypes.string,
       averageRating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       author: PropTypes.shape({
@@ -105,6 +107,8 @@ class SingleArticle extends PureComponent {
               <div className='py-5 border-b-2'>
                 <Tags tags={tags} />
               </div>
+
+              <CommentsContainer slug={article.slug} />
             </div>
           </PageLayout>
         ) : (
