@@ -111,6 +111,8 @@ export const register = userData => dispatch => {
         setAuthToken(response.data.payload.token);
         dispatch({ type: REGISTER_SUCCESS, payload: response.data });
         toast.success("Registration successful");
+        dispatch(fetchArticles());
+        dispatch(getProfile(response.data.payload.username));
         return response;
       }
     })
