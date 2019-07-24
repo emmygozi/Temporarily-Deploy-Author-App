@@ -13,10 +13,7 @@ import {
 } from './types';
 import { fetchArticles } from './articles';
 
-// axios.defaults.baseURL =
-//   'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
-
-axios.defaults.baseURL = 'https://kingsmen-ah-backend-stag-pr-51.herokuapp.com/api/v1';
+axios.defaults.baseURL = 'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
 
 export const setAuthToken = token => {
   if (token) {

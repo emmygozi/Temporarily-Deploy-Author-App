@@ -21,4 +21,6 @@ if (process.env.NODE_ENV !== 'production' && module.hot) {
   module.hot.accept('./components/App', renderApp);
 }
 
-renderApp();
+if (typeof window !== 'undefined') {
+  renderApp();
+}
