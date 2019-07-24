@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {  Link } from 'react-router-dom';
 
+
 export default function ProfileImage({ profile, user, isMyProfile }) {
   const { firstname, lastname, avatar } = profile;
   const { username } = user;
@@ -18,7 +19,7 @@ export default function ProfileImage({ profile, user, isMyProfile }) {
   return (
     <div>
       <div className="flex mb-5 mt-5">
-        <img src={avatar} alt='profile avatar' className="rounded-full border-solid border-white w-24 h-24" />
+        <img src={avatar || "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"} alt='profile avatar' className="rounded-full border-solid border-white w-24 h-24" />
         <div className="ml-5">
           <h2 className="font-lobster text-3xl">{`${firstname || 'John'} ${lastname || 'Doe'}`}</h2>
           <div className={isMyProfile? '' : 'hide'}>

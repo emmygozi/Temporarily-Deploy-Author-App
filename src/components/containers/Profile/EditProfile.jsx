@@ -63,6 +63,7 @@ class EditProfile extends Component {
         }
       });
   }
+
   handleChange =(e) => {
     const { profile } = this.state;
     
@@ -73,6 +74,7 @@ class EditProfile extends Component {
       }
     });
   }
+
   handleUpdate = () => {
     const { updateProfile, history, user: {username} } = this.props;
     const { profile } = this.state;
@@ -88,6 +90,7 @@ class EditProfile extends Component {
     updateProfile(updateObject);
     history.push(`/profile/${username}`);
   }
+
   render() {
     const { user, profile, isAuthenticated, history } = this.props;
     const { firstname, lastname } = profile;
@@ -119,66 +122,60 @@ class EditProfile extends Component {
                   />
                 </span>
               </div>
-              <h2 className="text-2xl text-center font-bold mt-5">{`${firstname || 'ade'} ${lastname || ''}`}</h2>
+              <h2 className="text-2xl text-center font-bold mt-5">{`${firstname || ''} ${lastname || ''}`}</h2>
             </div>
             <div className="profile-update-form md:mt-10 profile-container flex-2">
-              <div className="field flex">
-                <span>
-                Firstname:
-                </span>
+              <div className="field flex mb-2">
+                <span className="text-gray-800">Firstname</span>
                 <input 
                   type="text"
                   name="firstname"
                   id="firstname"
                   placeholder="Enter firstname here"
-                  className="flex-2 shadow appearance-none border rounded py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-400"
+                  className="flex-2 appearance-none border rounded py-2 px-3 text-black leading-tight outline-none focus:outline-none bg-gray-100"
                   value={first_name || ''} 
                   onChange={this.handleChange}
                 />
               </div>
-              <div className="field flex">
-                <span>Lastname</span>
+              <div className="field flex mb-2">
+                <span className="text-gray-800">Lastname</span>
                 <input 
                   type="text"
                   name="lastname"
                   id="lastname"
-                  placeholder="Enter lastname here"
                   className="flex-2 shadow appearance-none border rounded py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-400"
                   value={last_name || ''} 
                   onChange={this.handleChange}
                 />
               </div>
-              <div className="field flex">
-                <span>Bio</span>
+              <div className="field flex mb-2">
+                <span className="text-gray-800">Bio</span>
                 <input 
                   type="text"
                   name="bio"
                   id="bio"
-                  placeholder="Enter bio here"
                   className="flex-2 shadow appearance-none border rounded py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-400"
                   value={bio || ''} 
                   onChange={this.handleChange}
                 />
               </div>
-              <div className="field flex">
-                <span>Location</span>
+              <div className="field flex mb-2">
+                <span className="text-gray-800">Location</span>
                 <input 
                   type="text"
                   name="location"
                   id="location"
-                  placeholder="Enter your location"
                   className="flex-2 shadow appearance-none border rounded py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-400"
                   value={location || ''} 
                   onChange={this.handleChange}
                 />
               </div>
-              <div className="field flex">
-                <span>Phone Number:</span>
+              <div className="field flex mb-2">
+                <span className="text-gray-800">Phone Number:</span>
                 <input 
                   type="phone"
                   name="phone"
                   id="phone"
-                  placeholder="Enter phone number"
                   className="flex-2 shadow appearance-none border rounded py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline bg-gray-400"
                   value={phone || ''} 
                   onChange={this.handleChange}

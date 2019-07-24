@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Profile.scss';
 
+
 export default function ProfileDisplay(props) {
   const { tab } = props;
   const displayTab = (tabname) => {

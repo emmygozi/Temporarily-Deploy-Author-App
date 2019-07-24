@@ -12,9 +12,6 @@ import { logoutUser } from "@actions/auth";
 import Button from "../utilities/Button";
 import FontAwesome from "../utilities/FontAwesome";
 
-const formatString = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
 export class Header extends Component {
   constructor(props) {
     super(props);
@@ -210,9 +207,9 @@ export class Header extends Component {
                     />
                     <div className="ml-0 md:ml-4 lg:ml-4 md:text-left lg:text-left text-center hover:text-blue-700">
                       <div className="font-bold text-base">
-                        {`${formatString(firstname) || ""} ${formatString(lastname) || ""}`}
+                        {`${firstname || ""} ${lastname || ""}`}
                       </div>
-                      <div className="text-gray-500">{`@ ${formatString(username)}`}</div>
+                      <div className="text-gray-500">{`@ ${username}`}</div>
                     </div>
                   </div>
                 </Link>
