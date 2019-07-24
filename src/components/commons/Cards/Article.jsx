@@ -16,7 +16,7 @@ export const calculateRT = (text, wordsPerMinute = 100) => {
   return result;
 };
 
-const extractArticleDetails = (article, isSmall) => {
+export const extractArticleDetails = (article, isSmall) => {
   const {
     author: {
       profile: { firstname, lastname },
@@ -25,7 +25,8 @@ const extractArticleDetails = (article, isSmall) => {
     title,
     body: fullBody,
     image: fullImage,
-    createdAt
+    createdAt,
+    slug
   } = article;
   let bodyObject = {};
   try {
@@ -58,7 +59,8 @@ const extractArticleDetails = (article, isSmall) => {
     username,
     time: formatDate(createdAt).short,
     readTime: calculateRT(body, 400),
-    image
+    image,
+    slug
   };
 };
 
@@ -82,7 +84,7 @@ function Article(props) {
 
   return (
     <div
-      className={classNames('w-full rounded-lg', {
+      className={classNames('w-full rounded-lg mb-4', {
         'lg:w-1/3 md:w-1/2': isSmall,
         'w-full max-w-5xl': !isSmall,
         'lg:w-full md:w-full': stretch,
@@ -102,10 +104,10 @@ function Article(props) {
             width={isSmall ? '200px' : '100%'}
             height='100%'
             alt='Article'
-            className={classNames({
+            className={classNames('rounded shadow', {
               'article-img left:0 md:right-0 md:right-auto object-cover': true,
               absolute: isSmall,
-              'w-24 h-full pb-2': isSmall ? true : false
+              'w-24 h-full': isSmall ? true : false
             })}
           />
         </Link>
