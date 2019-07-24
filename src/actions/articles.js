@@ -14,8 +14,6 @@ import {
   GET_TAGS_FAILURE
 } from "./types";
 
-axios.defaults.baseURL = "https://kingsmen-ah-backend-stag-pr-51.herokuapp.com/api/v1";
-
 export const isLoading = () => ({
   type: IS_LOADING
 });
