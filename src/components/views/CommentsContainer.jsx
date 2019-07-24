@@ -88,6 +88,7 @@ export class CommentsContainer extends Component {
           name={comment.author.username}
           alt={comment.author.username}
           body={comment.body}
+          avatar={comment.author.profile.avatar}
           createdAt={date.long}
           likeCount={comment.likeCount}
           like={() => this.likeComment(comment.id)}
@@ -146,7 +147,7 @@ export class CommentsContainer extends Component {
   }
 
   render() {
-    const { comments, user } = this.props;
+    const { comments, user, profile: { avatar } } = this.props;
     const { comment, errors } = this.state;
 
     const data = this.createCommentListings(comments);
@@ -155,6 +156,10 @@ export class CommentsContainer extends Component {
       <Fragment>
         <CreateCommentCard
           name={user.username}
+          avatar={
+            avatar ||
+            "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"
+          }
           onChange={this.onChange}
           submit={this.onSubmit}
           reset={this.clearComment}
@@ -180,12 +185,14 @@ CommentsContainer.propTypes = {
   postComment: PropTypes.func.isRequired,
   delComment: PropTypes.func.isRequired,
   likeComment: PropTypes.func.isRequired,
-  unlikeComment: PropTypes.func.isRequired
+  unlikeComment: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   comments: state.comments.comments,
-  user: state.auth.user 
+  user: state.auth.user,
+  profile: state.auth.profile
 });
 
 export default connect(mapStateToProps, { getComments, postComment, delComment, likeComment, unlikeComment })(withRouter(CommentsContainer));

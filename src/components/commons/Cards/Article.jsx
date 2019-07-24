@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Gravatar from '@base/img/article.jpg';
-import { formatDate } from '@utils/helpers';
+import { formatDate } from '@utils/formatDate';
 
 export const calculateRT = (text, wordsPerMinute = 100) => {
-  let result = '< 1 min';
+  let result = '1 min';
 
   let textLength = text.split(' ').length;
   if (textLength > wordsPerMinute) {
@@ -37,8 +37,8 @@ const extractArticleDetails = (article, isSmall) => {
   let body = '';
   let image = fullImage;
   bodyObject.blocks.map(obj => {
-    if (obj.type === 'paragraph' && body === '') {
-      body = obj.data.text;
+    if (obj.type === 'paragraph') {
+      body += obj.data.text;
     } else if (obj.type === 'image') {
       if (!image) image = obj.data.url;
     }
@@ -47,7 +47,9 @@ const extractArticleDetails = (article, isSmall) => {
   let maxCharacters = 178;
   if (isSmall) maxCharacters = 80;
   const truncBody =
-    body.length >= maxCharacters ? `${body.slice(0, maxCharacters)}...` : body;
+    body.length >= maxCharacters
+      ? `${body.slice(0, maxCharacters).replace(/<[^>]+>/g, '')}...`
+      : body.replace(/<[^>]+>/g, '');
 
   return {
     title,
@@ -55,7 +57,7 @@ const extractArticleDetails = (article, isSmall) => {
     fullName: `${firstname || ''} ${lastname || ''}`,
     username,
     time: formatDate(createdAt).short,
-    readTime: calculateRT(body),
+    readTime: calculateRT(body, 400),
     image
   };
 };
@@ -80,10 +82,11 @@ function Article(props) {
 
   return (
     <div
-      className={classNames('w-full rounded-lg mb-6', {
+      className={classNames('w-full rounded-lg', {
         'lg:w-1/3 md:w-1/2': isSmall,
         'w-full max-w-5xl': !isSmall,
-        'lg:w-full md:w-full': stretch
+        'lg:w-full md:w-full': stretch,
+        'mt-4': !stretch && isSmall
       })}
     >
       <div
@@ -110,16 +113,16 @@ function Article(props) {
         <div
           className={classNames('text-sm', {
             'mt-2': !isSmall,
-            'md:mx-4': true,
-            'pl-32 md:pl-24': isSmall
+            'content-center': true,
+            'pl-32 md:pl-24 md:mx-4': isSmall
           })}
         >
           <Link to={`/article/${slug}`}>
-            <h2 className='font-semibold text-lg hover:text-blue-700'>
+            <h2 className='font-semibold text-lg hover:text-blue-700 overflow-hidden h-6 mb-1'>
               {title}
             </h2>
           </Link>
-          <p className='text-gray-600'>{body}</p>
+          <p className='text-gray-600 h-10 overflow-hidden'>{body}</p>
           <Link
             to={`/profile/${username}`}
             className='mr-3 hover:text-blue-700'

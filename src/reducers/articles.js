@@ -9,7 +9,11 @@ import {
   GET_ARTICLE_FAILURE,
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
-  GET_TAGS_FAILURE
+  GET_TAGS_FAILURE,
+  IS_LOADING_MORE,
+  GET_MORE_ARTICLES_SUCCESS,
+  GET_MORE_ARTICLES_FAILURE,
+  SET_NEXT_PAGE
 } from '@actions/types';
 
 const initialState = {
@@ -17,7 +21,9 @@ const initialState = {
   errors: {},
   tags: [],
   articles: [],
-  article: {}
+  article: {},
+  loadingMore: false,
+  nextPage: {}
 };
 
 export default (state = initialState, action) => {
@@ -59,8 +65,32 @@ export default (state = initialState, action) => {
         tags: action.payload,
         loading: false,
         errors: {}
-      }
+      };
+    case IS_LOADING_MORE:
+      return {
+        ...state,
+        loadingMore: true,
+        errors: {}
+      };
+    case GET_MORE_ARTICLES_SUCCESS:
+      return {
+        ...state,
+        loadingMore: false,
+        articles: state.articles.concat(action.payload),
+        errors: {}
+      };
+    case GET_MORE_ARTICLES_FAILURE:
+      return {
+        ...state,
+        loadingMore: false,
+        errors: action.payload
+      };
+    case SET_NEXT_PAGE:
+      return {
+        ...state,
+        nextPage: action.payload
+      };
     default:
       return state;
   }
-}
+};
