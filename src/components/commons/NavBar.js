@@ -3,10 +3,10 @@ import './index.scss';
 
 function NavBar() {
   return (
-    <div className='rounded border-radius-none bg-blue-700'>
-      <div className='container mx-auto max-w-6xl overflow-y-scroll'>
-        <div className='flex items-center justify-center text-white h-full'>
-          <ul className='mx-4'>
+    <div className='border-radius-none bg-blue-700'>
+      <div className='container mx-auto overflow-y-scroll'>
+        <div className='flex items-center justify-left text-white h-full'>
+          <ul>
             <li className='flex items-center text-gray-400 h-12 text-sm uppercase capitalize'>
               <div to='/' className='active mx-3 text-white'>
                 Home

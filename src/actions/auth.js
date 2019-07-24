@@ -13,7 +13,9 @@ import {
 } from './types';
 import { fetchArticles } from './articles';
 
-axios.defaults.baseURL = 'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
+axios.defaults.baseURL =
+  'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
+// axios.defaults.baseURL = 'http://localhost:3000/api/v1';
 
 export const setAuthToken = token => {
   if (token) {
@@ -104,13 +106,13 @@ export const loginUser = userData => async dispatch => {
 
 export const register = userData => dispatch => {
   axios
-    .post("/users", userData)
+    .post('/users', userData)
     .then(response => {
       if (response.status === 201) {
-        localStorage.setItem("token", response.data.payload.token);
+        localStorage.setItem('token', response.data.payload.token);
         setAuthToken(response.data.payload.token);
         dispatch({ type: REGISTER_SUCCESS, payload: response.data });
-        toast.success("Registration successful");
+        toast.success('Registration successful');
         dispatch(fetchArticles());
         dispatch(getProfile(response.data.payload.username));
         return response;

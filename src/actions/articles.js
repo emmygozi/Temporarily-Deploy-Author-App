@@ -1,5 +1,5 @@
-import axios from "axios";
-import { toast } from "react-toastify";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   IS_LOADING,
   ADD_ARTICLE_SUCCESS,
@@ -11,10 +11,12 @@ import {
   GET_ARTICLE_FAILURE,
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
-  GET_TAGS_FAILURE
-} from "./types";
-
-axios.defaults.baseURL = "https://kingsmen-ah-backend-staging.herokuapp.com/api/v1";
+  GET_TAGS_FAILURE,
+  IS_LOADING_MORE,
+  GET_MORE_ARTICLES_SUCCESS,
+  GET_MORE_ARTICLES_FAILURE,
+  SET_NEXT_PAGE
+} from './types';
 
 export const isLoading = () => ({
   type: IS_LOADING
@@ -84,9 +86,9 @@ export const createNewArticle = (data, history) => async dispatch => {
   try {
     dispatch(isLoading());
 
-    const response = await axios.post("/articles", data);
+    const response = await axios.post('/articles', data);
     dispatch(addArticleSuccess(response.data.payload));
-    toast.success("Article Published");
+    toast.success('Article Published');
     history.push(`/article/${response.data.payload.slug}`);
   } catch (error) {
     dispatch(addArticleFailure(error.response.data.errors));
@@ -99,7 +101,7 @@ export const editArticle = (id, data, history) => async dispatch => {
 
     const response = await axios.put(`/articles/${id}`, data);
     history.push(`/article/${id}`);
-    toast.success("Article updated!");
+    toast.success('Article updated!');
     dispatch(editArticleSuccess(response.data.payload));
   } catch (error) {
     dispatch(editArticleFailure(error.response.data.errors.global));
@@ -109,10 +111,9 @@ export const editArticle = (id, data, history) => async dispatch => {
 export const fetchArticles = () => async dispatch => {
   try {
     dispatch(isLoading());
-
-    const response = await axios.get("/articles");
-
+    const response = await axios.get('/articles');
     dispatch(fetchArticlesSuccess(response.data.payload.rows));
+    dispatch(setNextPage(response.data.payload.metadata));
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
   }
@@ -121,8 +122,7 @@ export const fetchArticles = () => async dispatch => {
 export const getAllTags = slug => async dispatch => {
   try {
     dispatch(isLoading());
-
-    const response = await axios.get("/tags");
+    const response = await axios.get('/tags');
     const result = response.data.payload.filter(item => item.slug === slug);
     dispatch(getTagsSuccess(result[0].tags));
   } catch (error) {
@@ -151,5 +151,34 @@ export const deleteArticle = id => async dispatch => {
     dispatch(fetchArticlesSuccess(response.data.data.payload));
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
+  }
+};
+
+export const isLoadingMore = () => ({
+  type: IS_LOADING_MORE
+});
+
+export const setNextPage = payload => ({
+  type: SET_NEXT_PAGE,
+  payload
+});
+export const fetchMoreArticlesSuccess = articles => ({
+  type: GET_MORE_ARTICLES_SUCCESS,
+  payload: articles
+});
+
+export const fetchMoreArticlesFailure = error => ({
+  type: GET_MORE_ARTICLES_FAILURE,
+  payload: error
+});
+
+export const fetchMoreArticles = nextPage => async dispatch => {
+  try {
+    dispatch(isLoadingMore());
+    const response = await axios.get(nextPage);
+    dispatch(fetchMoreArticlesSuccess(response.data.payload.rows));
+    dispatch(setNextPage(response.data.payload.metadata));
+  } catch (error) {
+    dispatch(fetchMoreArticlesFailure(error.response.data.errors.global));
   }
 };
