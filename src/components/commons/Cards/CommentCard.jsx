@@ -10,9 +10,9 @@ export function CommentCard({
   // like, unlike
 }) {
   return (
-    <div className="px-auto my-4 p-1 bg-gray-200">
-      <div className="w-full">
-        <div className="border-r border-b border-l border-gray-400 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+    <div className="">
+      <div className="w-full my-4">
+        <div className="shadow-md border border-gray-400 rounded bg-white rounded p-4 flex flex-col justify-between leading-normal">
           <div className="flex mb-4">
             <img className="w-10 h-10 rounded-full mr-4" src={avatar || "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"} alt={alt} />
             <div className="text-sm">
@@ -42,7 +42,7 @@ CommentCard.propTypes = {
   // like: PropTypes.func.isRequired,
   // unlike: PropTypes.func.isRequired,
   // likeCount: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   alt: PropTypes.string,
   createdAt: PropTypes.string.isRequired,
   del: PropTypes.func
@@ -50,6 +50,7 @@ CommentCard.propTypes = {
 
 CommentCard.defaultProps = {
   alt: 'avatar',
+  avatar: 'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png',
   del: () => { }
 };
 

@@ -4,3 +4,7 @@ $background-color: rgba($bg-color, 0.4);
 .bg-gray {
   background: $background-color;
 }
+
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
+}
