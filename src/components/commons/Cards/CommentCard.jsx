@@ -14,7 +14,7 @@ export function CommentCard({
       <div className="w-full">
         <div className="border-r border-b border-l border-gray-400 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
           <div className="flex mb-4">
-            <img className="w-10 h-10 rounded-full mr-4" src={avatar} alt={alt} />
+            <img className="w-10 h-10 rounded-full mr-4" src={avatar || "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"} alt={alt} />
             <div className="text-sm">
               <p className="text-gray-900 leading-none">{name}</p>
               <p className="text-gray-600 mt-1">{createdAt}</p>
@@ -42,14 +42,13 @@ CommentCard.propTypes = {
   // like: PropTypes.func.isRequired,
   // unlike: PropTypes.func.isRequired,
   // likeCount: PropTypes.string.isRequired,
-  avatar: PropTypes.string,
+  avatar: PropTypes.string.isRequired,
   alt: PropTypes.string,
   createdAt: PropTypes.string.isRequired,
   del: PropTypes.func
 };
 
 CommentCard.defaultProps = {
-  avatar: 'https://tailwindcss.com/img/card-left.jpg',
   alt: 'avatar',
   del: () => { }
 };
