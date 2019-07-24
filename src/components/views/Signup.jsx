@@ -4,12 +4,14 @@ import { connect } from "react-redux";
 import FormInput from "@components/commons/FormComponents/RenderInput";
 import Button from "@components/commons/utilities/Button";
 import { register } from "@actions/auth";
+import Preloader from "@components/commons/Preloader";
+
 
 const emailRegex = RegExp(
   /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
 );
 
-class Signup extends Component {
+export class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,7 +46,7 @@ class Signup extends Component {
         break;
       case "confirmpass":
         errors.confirmpass =
-          input.password !== input.confirmpass || aValue.length === 0
+          input.password !== aValue || aValue.length === 0
             ? "Password does not match"
             : "";
         break;
@@ -52,7 +54,8 @@ class Signup extends Component {
     this.setState({ input: { ...input, [name]: value }, errors });
   };
 
-  loginBtnClicked = () => {
+  signupBtnClicked = e => {
+    e.preventDefault();
     const { input, errors } = this.state;
     const { register } = this.props;
     const { email, password, username } = input;
@@ -71,81 +74,88 @@ class Signup extends Component {
 
   registerPage = () => {
     const { input, errors } = this.state;
+    const { loading } = this.props;
     const { username, email, password, confirmpass } = input;
-    // const { errors: errorObject } = this.props;
-
-    // const { email: mail, username: uniquename } = errorObject;
-    // const uniquename ='error';
-    // const mail ='error';
-    
-    // const unique = uniquename || "";
-    // const mailErr = mail || "";
 
     return (
-      <div className="w-full md:w-2/3 lg:w-2/3 m-auto md:my-4 lg:my-6">
-        <span className="text-xs md:text-base lg:text-lg text-gray-700">
+      <form onSubmit={this.signupBtnClicked}>
+        <div className="w-full md:w-2/3 lg:w-2/3 m-auto md:my-4 lg:my-6">
+          <span className="text-xs md:text-base lg:text-lg text-gray-700">
           Enter your username, email address and password to create your
           account.
-        </span>
-        <FormInput
-          id="username"
-          type="text"
-          name="username"
-          value={username}
-          label="Enter Username"
-          className=""
-          error={errors.username}
-          handleChange={this.handleChange}
-        />
-        <FormInput
-          id="email"
-          type="email"
-          name="email"
-          value={email}
-          label="Enter Email"
-          className=""
-          error={errors.email}
-          handleChange={this.handleChange}
-        />
-        <FormInput
-          id="password"
-          type="password"
-          name="password"
-          value={password}
-          label="Enter Password"
-          className=""
-          error={errors.password}
-          handleChange={this.handleChange}
-        />
-        <FormInput
-          id="confirmpass"
-          type="password"
-          name="confirmpass"
-          value={confirmpass}
-          label="Confirm Password"
-          className=""
-          error={errors.confirmpass}
-          handleChange={this.handleChange}
-        />
-        <Button
-          type="solid"
-          onClick={this.loginBtnClicked}
-          color="blue"
-          stretch
-        >
-          Sign Up
-        </Button>
-        <div className="text-xs md:text-base my-4">
-          <span>Have an account?</span>
-          <Button type="regular" onClick={this.showSigninModal} color="blue">
-            Sign In
+          </span>
+          <FormInput
+            id="username"
+            type="text"
+            name="username"
+            value={username}
+            label="Enter Username"
+            className=""
+            error={errors.username}
+            handleChange={this.handleChange}
+          />
+          <FormInput
+            id="email"
+            type="email"
+            name="email"
+            value={email}
+            label="Enter Email"
+            className=""
+            error={errors.email}
+            handleChange={this.handleChange}
+          />
+          <FormInput
+            id="password"
+            type="password"
+            name="password"
+            value={password}
+            label="Enter Password"
+            className=""
+            error={errors.password}
+            handleChange={this.handleChange}
+          />
+          <FormInput
+            id="confirmpass"
+            type="password"
+            name="confirmpass"
+            value={confirmpass}
+            label="Confirm Password"
+            className=""
+            error={errors.confirmpass}
+            handleChange={this.handleChange}
+          />
+          <Button
+            type="solid"
+            onClick={this.signupBtnClicked}
+            color="blue"
+            stretch
+          >
+            {loading === true ? (
+              <Preloader
+                type="button"
+                styles="TailSpin"
+                height={15}
+                width={15}
+                color="white"
+              />
+          ) : (
+            "Register"
+          )}
           </Button>
+          <div className="text-xs md:text-base my-4">
+            <span>Have an account?</span>
+            <Button type="regular" onClick={this.showSigninModal} color="blue">
+            Sign In
+            </Button>
+          </div>
+          <div className="text-xs md:text-base my-4">
+            <span>Can&lsquo;t remember password?</span>
+            <Button type="regular" onClick={() => {}} color="blue">
+            Reset password
+            </Button>
+          </div>
         </div>
-        <span className="text-xs md:text-base lg:text-base text-gray-700">
-          Click “Register” above to accept Author’s Haven We
-          hope you have a pleasant read/write
-        </span>
-      </div>
+      </form>
     );
   };
 
@@ -153,6 +163,15 @@ class Signup extends Component {
     return <div>{this.registerPage()}</div>;
   }
 }
+
+Signup.defaultProps = {
+  errors: {
+    username: "username",
+    email: "username@something.com",
+    password: "username",
+    confirmpass: "username"
+  }
+};
 
 Signup.propTypes = {
   user: PropTypes.shape({
@@ -163,14 +182,16 @@ Signup.propTypes = {
     email: PropTypes.string,
     password: PropTypes.string,
     confirmpass: PropTypes.string
-  }).isRequired,
+  }),
   register: PropTypes.func.isRequired,
-  showSignin: PropTypes.func.isRequired
+  showSignin: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  errors: state.auth.errors
+  errors: state.auth.error,
+  loading: state.auth.loading
 });
 export default connect(
   mapStateToProps,

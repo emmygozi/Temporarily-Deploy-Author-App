@@ -8,6 +8,8 @@ import {
   GET_PROFILE_ERROR,
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
+  ACTIVATE_SUCCESS,
+  ACTIVATE_FAILURE
 } from "../actions/types";
 
 const initialState = {
@@ -76,6 +78,18 @@ const authReducer = (state = initialState, action) => {
         ...state,
         error: action.payload,
         message: action.payload
+      };
+    case ACTIVATE_SUCCESS:
+      return {
+        ...state,
+        isActivated: true,
+        message: action.payload
+      };
+    case ACTIVATE_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        isActivated: false
       };
     default:
       return state;
