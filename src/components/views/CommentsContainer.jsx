@@ -156,7 +156,7 @@ export class CommentsContainer extends Component {
   }
 
   render() {
-    const { comments, user, profile: { avatar } } = this.props;
+    const { comments, user, profile: { avatar }, isAuthenticated } = this.props;
     const { comment, errors, toggle } = this.state;
 
     const data = this.createCommentListings(comments);
@@ -176,14 +176,14 @@ export class CommentsContainer extends Component {
             value={comment}
             commentError={errors.commentError}
           />
-        ) : (
+        ) : (isAuthenticated ? (
           <div className="w-full mb-6 border cursor-text shadow" onClick={this.toggleComment} onKeyDown={this.toggleComment} role="presentation">
             <div className="flex p-4 items-center">
               <img src={avatar || "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"} alt="avatar" className="w-8 h-8 rounded-full" />
               <div className="ml-8 font-serif text-gray-500">Write a response...</div>
             </div>
           </div>
-        )
+        ) : '')
       }
         {data}
         <Footer />
@@ -209,6 +209,7 @@ CommentsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
   comments: state.comments.comments,
   user: state.auth.user,
   profile: state.auth.profile

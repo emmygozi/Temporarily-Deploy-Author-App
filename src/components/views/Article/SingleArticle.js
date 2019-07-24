@@ -53,6 +53,10 @@ class SingleArticle extends PureComponent {
     getAllTags(articleId);
   }
 
+  formatString = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   getArticleBody = raw => {
     if (!raw) {
       return;
@@ -64,7 +68,7 @@ class SingleArticle extends PureComponent {
     const { article, tags } = this.props;
     const body = this.getArticleBody(article.body);
     if (!article.author) return '';
-    const fullname = `${article.author.profile.firstname || ''} ${article.author.profile.lastname || ''}`;
+    const fullname = `${this.formatString(article.author.profile.firstname) || ''} ${this.formatString(article.author.profile.lastname) || ''}`;
     return (
       <PageLayout>
         <Helmet>
@@ -76,7 +80,7 @@ class SingleArticle extends PureComponent {
           <div className="my-8 flex items-center">
             <img className="w-12 h-12 rounded-full mr-4" src={article.author.profile.avatar || this.defaultAvatar} alt="Avatar of Jonathan Reinink" />
             <div className="ml-4">
-              <h4 className="text-sm">{fullname === ' ' ? article.author.username : fullname}</h4>
+              <h4 className="text-sm">{fullname === ' ' ? this.formatString(article.author.username) : fullname}</h4>
               <div className="flex items-center text-sm text-gray-600">
                 <p className="text-xs">{moment(article.createdAt).format("MMM DD, YYYY")}</p>
                 <span className="mx-3 text-black my-auto">.</span>

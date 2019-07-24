@@ -9,7 +9,9 @@ import {
   SET_PROFILE,
   LOGOUT_USER,
   REGISTER_SUCCESS,
-  REGISTER_FAILURE
+  REGISTER_FAILURE,
+  ACTIVATE_SUCCESS,
+  ACTIVATE_FAILURE
 } from './types';
 import { fetchArticles } from './articles';
 
@@ -131,4 +133,27 @@ export const register = userData => dispatch => {
         }
       }
     });
+};
+
+export const userActivated = (userParams, history) => async dispatch => {
+  try {
+    const { email, token } = userParams;
+    const res = await axios.post(
+      `/auth/activate_user?email=${email}&token=${token}`
+    );
+
+    const response = res.data;
+    if (res.status === 200) {
+      dispatch({ type: ACTIVATE_SUCCESS, payload: response });
+      toast.success("Account verified!");
+      history.push("/");
+      return response;
+    }
+  } catch (err) {
+    if (err) {
+      toast.error("Your verification token is expired!");
+      dispatch({ type: ACTIVATE_FAILURE, payload: err.response.data.errors });
+      history.push("/");
+    }
+  }
 };
