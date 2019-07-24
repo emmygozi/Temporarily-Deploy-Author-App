@@ -2,10 +2,6 @@ $base-color: #335bcf;
 $base-hover-color: rgb(50, 82, 177);
 $tool-tip-color: rgb(20, 20, 20);
 
-.border-radius-none {
-  border-radius: 0 !important;
-}
-
 .rounded {
   &.text-blue-700 {
     color: $base-color;
@@ -68,11 +64,15 @@ input {
 }
 
 .bg-blue-700 {
-  background: $base-color;
+  background: $base-color !important;
 }
 
 .hover\:bg-blue-800:hover {
   background: $base-hover-color;
+}
+
+.hover\:text-blue-700:hover {
+  color: $base-color !important;
 }
 
 button,
@@ -104,4 +104,8 @@ button:disabled {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.sunken {
+  box-shadow: 1px 1px 5px #ccc inset;
 }
