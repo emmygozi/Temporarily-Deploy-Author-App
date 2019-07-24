@@ -109,3 +109,11 @@ button:disabled {
 .sunken {
   box-shadow: 1px 1px 5px #ccc inset;
 }
+
+.searchContainer {
+  max-height: calc(50vh);
+}
+
+.searchItem:hover {
+  cursor: pointer;
+}

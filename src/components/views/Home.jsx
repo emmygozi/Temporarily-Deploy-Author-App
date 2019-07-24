@@ -103,7 +103,7 @@ class Home extends Component {
                   ? this.displayBigArticle(mainArticle[0])
                   : ''}
               </div>
-              <div className='md:pl-8 flex flex-col justify-between lg:pb-24 lg:mb-6'>
+              <div className='md:pl-8 flex flex-col justify-between lg:pb-24 lg:mb-8'>
                 {subArticles.map(article =>
                   this.displaySmallArticle(article, true)
                 )}
