@@ -70,6 +70,8 @@ class SingleArticle extends PureComponent {
       body = this.getArticleBody(article.body);
     }
 
+    if (!article.author) return '';
+
     return (
       <div>
         {article ? (
