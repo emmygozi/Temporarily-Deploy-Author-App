@@ -17,7 +17,7 @@ import {
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE
-} from "./types";
+} from './types';
 
 export const isLoading = () => ({
   type: IS_LOADING
@@ -33,7 +33,7 @@ export const addArticleFailure = error => ({
   payload: error
 });
 
-export const clearSingleArticle = () =>  ({
+export const clearSingleArticle = () => ({
   type: CLEAR_SINGLE_ARTICLE
 });
 
@@ -96,6 +96,7 @@ export const createNewArticle = (data, history) => async dispatch => {
     toast.success('Article Published');
     history.push(`/article/${response.data.payload.slug}`);
   } catch (error) {
+    toast.error(error.response.data.errors.global);
     dispatch(addArticleFailure(error.response.data.errors));
   }
 };

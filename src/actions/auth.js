@@ -145,15 +145,15 @@ export const userActivated = (userParams, history) => async dispatch => {
     const response = res.data;
     if (res.status === 200) {
       dispatch({ type: ACTIVATE_SUCCESS, payload: response });
-      toast.success("Account verified!");
-      history.push("/");
+      toast.success('Account verified!');
+      history.push('/');
       return response;
     }
   } catch (err) {
     if (err) {
-      toast.error("Your verification token is expired!");
+      toast.error('Your verification token is expired!');
       dispatch({ type: ACTIVATE_FAILURE, payload: err.response.data.errors });
-      history.push("/");
+      history.push('/');
     }
   }
 };
