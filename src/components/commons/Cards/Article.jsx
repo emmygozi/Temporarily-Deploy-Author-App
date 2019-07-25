@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import HTMLParser from 'react-html-parser';
 import Gravatar from '@base/img/article.jpg';
 import { formatDate } from '@utils/formatDate';
 
@@ -51,12 +52,12 @@ export const extractArticleDetails = (article, isSmall) => {
     )}`;
   }
 
-  let maxCharacters = 178;
+  let maxCharacters = 350;
   if (isSmall) maxCharacters = 80;
-  const truncBody =
-    body.length >= maxCharacters
-      ? `${body.slice(0, maxCharacters).replace(/<[^>]+>/g, '')}...`
-      : body.replace(/<[^>]+>/g, '');
+  let truncBody =
+    body.length >= maxCharacters ? `${body.slice(0, maxCharacters)}...` : body;
+
+  truncBody = HTMLParser(truncBody);
 
   return {
     title,
@@ -64,7 +65,7 @@ export const extractArticleDetails = (article, isSmall) => {
     fullName: `${firstname || ''} ${lastname || ''}`,
     username,
     time: formatDate(createdAt).short,
-    readTime: calculateRT(body, 400),
+    readTime: calculateRT(fullBody, 300),
     image,
     slug
   };
