@@ -8,7 +8,7 @@ function NavBar() {
         <div className='flex items-center justify-left text-white h-full'>
           <ul>
             <li className='flex items-center text-gray-400 h-12 text-sm uppercase capitalize'>
-              <div to='/' className='mx-3 text-white'>
+              <div to='/' className='font-bold mx-3 text-white'>
                 Home
               </div>
               <div className='mx-3'>Family</div>

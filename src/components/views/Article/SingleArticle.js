@@ -66,9 +66,14 @@ class SingleArticle extends PureComponent {
 
   render() {
     const { article, tags } = this.props;
-    const body = this.getArticleBody(article.body);
     if (!article.author) return '';
-    const fullname = `${this.formatString(article.author.profile.firstname) || ''} ${this.formatString(article.author.profile.lastname) || ''}`;
+    const fullname = `${article.author.profile.firstname || ''} ${article.author.profile.lastname || ''}`;
+
+    let body;
+    if (article) {
+      body = this.getArticleBody(article.body);
+    }
+
     return (
       <PageLayout>
         <Helmet>

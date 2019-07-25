@@ -1,25 +1,30 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Preloader from '@components/commons/Preloader';
 import Header from '@components/commons/Header';
 
-const user = {
-  isAuthenticated: true,
-  username: 'Macco'
-};
-
-const profile = {
-  firstname: 'Emmanuel',
-  lastname: 'Okwara',
-  avatar: './public/img/logo.png'
-};
 
 function PageLayout(props) {
-  const { children } = props;
+  const { children, user, profile, loading } = props;
+
   return (
     <Fragment>
-      <Header user={user} profile={profile} />
-
-      {children}
+      {!loading ? (
+        <Fragment>
+          <Header user={user} profile={profile} />
+          
+          { children }
+        </Fragment>
+      ) : (
+        <Preloader
+          type="page"
+          styles="Triangle"
+          width={80}
+          height={80}
+          color="blue"
+        />
+      )}
     </Fragment>
   );
 }
@@ -31,4 +36,10 @@ PageLayout.propTypes = {
   ]).isRequired
 }
 
-export default PageLayout;
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  profile: state.auth.profile,
+  loading: state.article.loading
+});
+
+export default connect(mapStateToProps)(PageLayout);

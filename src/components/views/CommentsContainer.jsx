@@ -90,6 +90,7 @@ export class CommentsContainer extends Component {
           alt={comment.author.username}
           body={comment.body}
           avatar={comment.author.profile.avatar}
+          author={comment.author}
           createdAt={date.long}
           likeCount={comment.likeCount}
           like={() => this.likeComment(comment.id)}

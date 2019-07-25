@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { faTrashAlt } from '@fortawesome/fontawesome-free-regular';
 // import { faHeart } from '@fortawesome/fontawesome-free-solid';
 import FontAwesome from '../utilities/FontAwesome';
 
 export function CommentCard({
-  name, avatar, alt, body, createdAt, del, 
+  name, avatar, alt, body, createdAt, author, del, user,
   // likeCount, 
   // like, unlike
 }) {
@@ -28,9 +29,11 @@ export function CommentCard({
             <div className="mb-4 ml-8 mr-4">
               <p className="text-gray-700 text-base">{body}</p>
             </div>
-            <div className="text-bg ml-auto">
-              <FontAwesome type={faTrashAlt} onClick={del} styleClass="cursor-pointer" />
-            </div>
+            {user.username === author.username && (
+              <div className="text-bg ml-auto">
+                <FontAwesome type={faTrashAlt} onClick={del} styleClass="cursor-pointer" />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -56,4 +59,8 @@ CommentCard.defaultProps = {
   del: () => { }
 };
 
-export default CommentCard;
+const mapStateToProps = state => ({
+  user: state.auth.user
+});
+
+export default connect(mapStateToProps)(CommentCard);
