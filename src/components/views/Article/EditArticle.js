@@ -34,7 +34,6 @@ class EditArticle extends Component {
     }).isRequired,
     history: PropTypes.shape({}).isRequired,
     editArticle: PropTypes.func.isRequired,
-    getSingleArticle: PropTypes.func.isRequired
   }
   constructor(props) {
     super(props);
@@ -44,12 +43,6 @@ class EditArticle extends Component {
     this.state = {
       title: `${article.title}`,
     };
-  }
-
-  componentDidMount() {
-    const { match: { params: {articleId} } }= this.props;
-    const { getSingleArticle } = this.props;
-    getSingleArticle(articleId);
   }
 
   onChange = (e) => {

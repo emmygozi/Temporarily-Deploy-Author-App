@@ -17,7 +17,11 @@ export default function ProfileDisplay(props) {
     case 'Followers': 
     return displayTab('Followers');
     case 'Articles': 
-    return displayTab('No article yet');
+      return (
+        <div className="container mx-auto flex mt-4">
+          Hello
+        </div>
+      );
     case 'Bookmarks': 
     return displayTab('no bookmarks');
     default:
