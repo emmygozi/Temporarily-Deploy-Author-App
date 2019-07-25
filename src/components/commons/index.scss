@@ -2,6 +2,10 @@ $base-color: #335bcf;
 $base-hover-color: rgb(50, 82, 177);
 $tool-tip-color: rgb(20, 20, 20);
 
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
+}
+
 .rounded {
   &.text-blue-700 {
     color: $base-color;

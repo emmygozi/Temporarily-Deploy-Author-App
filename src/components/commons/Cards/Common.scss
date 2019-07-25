@@ -1,6 +1,15 @@
 $bg-color: #c4c4c4;
+$base-color: #335bcf;
 $background-color: rgba($bg-color, 0.4);
 
 .bg-gray {
   background: $background-color;
+}
+
+.text-blue-700 {
+  color: $base-color !important;
+}
+
+input:focus, textarea:focus, select:focus{
+  outline: none !important;
 }

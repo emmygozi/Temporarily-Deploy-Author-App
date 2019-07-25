@@ -15,8 +15,9 @@ import {
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
-  SET_NEXT_PAGE
-} from './types';
+  SET_NEXT_PAGE,
+  CLEAR_SINGLE_ARTICLE
+} from "./types";
 
 export const isLoading = () => ({
   type: IS_LOADING
@@ -30,6 +31,10 @@ export const addArticleSuccess = article => ({
 export const addArticleFailure = error => ({
   type: ADD_ARTICLE_FAILURE,
   payload: error
+});
+
+export const clearSingleArticle = () =>  ({
+  type: CLEAR_SINGLE_ARTICLE
 });
 
 export const fetchArticlesSuccess = articles => ({
@@ -132,7 +137,8 @@ export const getAllTags = slug => async dispatch => {
 
 export const getSingleArticle = id => async dispatch => {
   try {
-    dispatch(isLoading);
+    dispatch(isLoading());
+    dispatch(clearSingleArticle());
 
     const response = await axios.get(`/articles/${id}`);
 

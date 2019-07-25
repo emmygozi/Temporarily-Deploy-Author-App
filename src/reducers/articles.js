@@ -10,6 +10,7 @@ import {
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
   GET_TAGS_FAILURE,
+  CLEAR_SINGLE_ARTICLE,
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
@@ -48,6 +49,11 @@ export default (state = initialState, action) => {
         loading: false,
         article: action.payload,
         errors: {}
+      };
+    case CLEAR_SINGLE_ARTICLE:
+      return {
+        ...state,
+        article: {}
       };
     case ADD_ARTICLE_FAILURE:
     case GET_ARTICLES_FAILURE:
