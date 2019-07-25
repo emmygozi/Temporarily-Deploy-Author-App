@@ -8,7 +8,7 @@ import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
 import convertToJSON from '../../../helpers/convertToJSON';
 import './index.scss';
-import CommentsContainer from '../CommentsContainer';
+import CommentsContainer from '../../../containers/CommentsContainer';
 
 class SingleArticle extends PureComponent {
   static propTypes = {
