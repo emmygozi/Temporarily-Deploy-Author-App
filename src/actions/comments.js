@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   GET_COMMENTS, GET_COMMENTS_ERROR, POST_COMMENT, POST_COMMENT_ERROR, DELETE_COMMENT, DELETE_COMMENT_ERROR, LIKE_COMMENT, UNLIKE_COMMENT
 } from './types';
@@ -23,10 +24,12 @@ export const postComment = (newComment, slug) => (dispatch) => {
       type: POST_COMMENT,
       payload: res.data.payload
     }))
-    .catch(err => dispatch({
+    .catch(err => {
+      toast.error(err.response.data.errors.global);
+      dispatch({
       type: POST_COMMENT_ERROR,
       payload: err.response.data
-    }));
+    })});
 };
 
 // Delete a comment
