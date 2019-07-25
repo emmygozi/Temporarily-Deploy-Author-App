@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Tags from '@components/commons/Cards/Tags';
 import ReactHtmlParser from 'react-html-parser';
 import Helmet from 'react-helmet';
+import { calculateRT } from "@components/commons/Cards/Article";
 import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
 import Preloader from '@components/commons/Preloader';
@@ -133,7 +134,7 @@ class SingleArticle extends PureComponent {
                   {moment(article.createdAt).format('MMM DD, YYYY')}
                 </p>
                 <span className='mx-3 text-black my-auto'>.</span>
-                <p className='text-xs'>1 mins read</p>
+                <p className='text-xs'>{`${calculateRT(article.body, 300)} read`}</p>
               </div>
               <ArticleRating
                 averageRating={

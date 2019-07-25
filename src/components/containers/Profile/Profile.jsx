@@ -52,7 +52,7 @@ class Profile extends Component {
             <ProfileImage profile={profile} user={user} isMyProfile={isMyProfile} />
           </div>
           <div className="container mx-auto">
-            <ul className="justify-center flex py-2 border-b-2 font-sans ">
+            <ul className="justify-center flex py-2 font-sans ">
               {tabs.map(tab => {
                 return (
                   <li key={tab} className="w-30 text-center">
