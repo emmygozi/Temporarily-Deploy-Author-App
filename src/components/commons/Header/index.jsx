@@ -114,9 +114,13 @@ export class Header extends Component {
       <Button type='regular' color='blue' onClick={this.toggleSignInDialog}>
         Sign In
       </Button>
-      <Button type='outlined' color='blue' onClick={this.toggleSignUpDialog}>
+      <button
+        type='button'
+        className='bg-transparent hover:text-white py-2 px-4 border rounded mr-2 text-sm hover:bg-blue-700 border-blue-700 hover:border-transparent'
+        onClick={this.toggleSignUpDialog}
+      >
         Get Started
-      </Button>
+      </button>
     </Fragment>
   );
 
