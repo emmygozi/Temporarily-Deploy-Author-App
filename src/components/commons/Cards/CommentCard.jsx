@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import { faTrashAlt } from '@fortawesome/fontawesome-free-regular';
-// import { faHeart } from '@fortawesome/fontawesome-free-solid';
+import { faHeart } from '@fortawesome/fontawesome-free-solid';
 import FontAwesome from '../utilities/FontAwesome';
 
 export function CommentCard({
-  name, avatar, alt, body, createdAt, author, del, user,
-  // likeCount, 
-  // like, unlike
-}) {
+  name, avatar, alt, body, createdAt, del, like, author, user, likes, userLike }) {
   return (
     <div className="">
       <div className="w-full my-4">
@@ -21,8 +19,17 @@ export function CommentCard({
               <p className="text-gray-600 mt-1">{createdAt}</p>
             </div>
             <div className="text-bg ml-auto">
-              {/* <span className="mr-1">{likeCount}</span> */}
-              {/* <FontAwesome type={faHeart} onClick={like} onKeyDown={unlike} /> */}
+              <span className="mr-1">{likes}</span>
+              <FontAwesome
+                type={faHeart}
+                onClick={like}
+                styleClass={
+                  classnames('cursor-pointer', {
+                    'liked': userLike,
+                    'faHeart': !userLike
+                  })
+                }
+              />
             </div>
           </div>
           <div className="flex justify-between">
@@ -44,19 +51,16 @@ export function CommentCard({
 CommentCard.propTypes = {
   name: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  // like: PropTypes.func.isRequired,
-  // unlike: PropTypes.func.isRequired,
-  // likeCount: PropTypes.string.isRequired,
-  avatar: PropTypes.string,
+  likes: PropTypes.number.isRequired,
+  like: PropTypes.func.isRequired,
+  avatar: PropTypes.string.isRequired,
   alt: PropTypes.string,
   createdAt: PropTypes.string.isRequired,
-  del: PropTypes.func
+  del: PropTypes.func.isRequired
 };
 
 CommentCard.defaultProps = {
   alt: 'avatar',
-  avatar: 'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png',
-  del: () => { }
 };
 
 const mapStateToProps = state => ({

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -10,8 +9,8 @@ import { calculateRT } from "@components/commons/Cards/Article";
 import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
 import Preloader from '@components/commons/Preloader';
+import CommentsContainer from '../../../containers/CommentsContainer';
 import convertToJSON from '../../../helpers/convertToJSON';
-import CommentsContainer from '../CommentsContainer';
 import 'react-rater/lib/react-rater.css'
 import './index.scss';
 
@@ -38,7 +37,8 @@ class SingleArticle extends PureComponent {
       })
     }).isRequired,
     getSingleArticle: PropTypes.func.isRequired,
-    getAllTags: PropTypes.func.isRequired
+    getAllTags: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired
   };
 
   constructor(props) {
@@ -100,7 +100,7 @@ class SingleArticle extends PureComponent {
   }
 
   render() {
-    const { article, tags } = this.props;
+    const { article, tags, isAuthenticated } = this.props;
 
     if (!article.author) {
       return (
@@ -160,7 +160,7 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={article.averageRating ? article.averageRating : 0} onRate={this.rateArticle} />
+            <Rater total={5} rating={article.averageRating ? article.averageRating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
 
 
