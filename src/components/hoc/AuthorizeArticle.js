@@ -20,12 +20,12 @@ const AuthorizeArticle = (props) => {
   return (
     <Fragment>
       {loading && (
-        <div className="flex w-full h-screen items-center justify-center bg-gray-300">
+        <div className="">
           <Preloader
             type="page"
-            styles="TailSpin"
-            height={50}
-            width={50}
+            styles="Triangle"
+            height={80}
+            width={80}
             color="blue"
           />
         </div>
@@ -68,7 +68,7 @@ AuthorizeArticle.propTypes = {
 };
 
 AuthorizeArticle.defaultProps = {
-  loading: false
+  loading: true
 }
 
 export default AuthorizeArticle;
