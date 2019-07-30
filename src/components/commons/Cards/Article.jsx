@@ -41,9 +41,15 @@ export const extractArticleDetails = (article, isSmall) => {
     if (obj.type === 'paragraph') {
       body += obj.data.text;
     } else if (obj.type === 'image') {
-      if (!image) image = obj.data.url;
+      if (!image) image = obj.data.file.url;
     }
   });
+
+  if (!image) {
+    image = `https://picsum.photos/1000/800?random=${Math.floor(
+      Math.random * 100
+    )}`;
+  }
 
   let maxCharacters = 178;
   if (isSmall) maxCharacters = 80;
@@ -107,7 +113,8 @@ function Article(props) {
             className={classNames('rounded shadow', {
               'article-img left:0 md:right-0 md:right-auto object-cover': true,
               absolute: isSmall,
-              'w-24 h-full': isSmall ? true : false
+              'w-24 h-full': isSmall ? true : false,
+              'big-article': !isSmall
             })}
           />
         </Link>

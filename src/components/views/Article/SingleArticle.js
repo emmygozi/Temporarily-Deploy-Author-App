@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Tags from '@components/commons/Cards/Tags';
-import { calculateRT } from '@components/commons/Cards/Article';
 import ReactHtmlParser from 'react-html-parser';
+import Helmet from 'react-helmet';
 import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
+import Preloader from '@components/commons/Preloader';
+import CommentsContainer from '@containers/CommentsContainer';
 import convertToJSON from '../../../helpers/convertToJSON';
 import './index.scss';
-import CommentsContainer from '../../../containers/CommentsContainer';
 
 class SingleArticle extends PureComponent {
   static propTypes = {
@@ -21,7 +22,6 @@ class SingleArticle extends PureComponent {
     article: PropTypes.shape({
       title: PropTypes.string,
       body: PropTypes.string,
-      slug: PropTypes.string,
       createdAt: PropTypes.string,
       averageRating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       author: PropTypes.shape({
@@ -55,6 +55,29 @@ class SingleArticle extends PureComponent {
     getAllTags(articleId);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {
+      match: {
+        params: { articleId }
+      },
+      getSingleArticle,
+      getAllTags
+    } = this.props;
+    const {
+      match: {
+        params: { articleId: newArticleId }
+      }
+    } = nextProps;
+    if (articleId !== newArticleId) {
+      getSingleArticle(newArticleId);
+      getAllTags(newArticleId);
+    }
+  }
+
+  formatString = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   getArticleBody = raw => {
     if (!raw) {
       return;
@@ -64,59 +87,75 @@ class SingleArticle extends PureComponent {
 
   render() {
     const { article, tags } = this.props;
+    if (!article.author) {
+      return (
+        <Preloader
+          type='page'
+          styles='Triangle'
+          width={80}
+          height={80}
+          color='blue'
+        />
+      );
+    }
+    const fullname = `${article.author.profile.firstname || ''} ${article.author
+      .profile.lastname || ''}`;
 
     let body;
     if (article) {
       body = this.getArticleBody(article.body);
     }
 
-    if (!article.author) return '';
-
     return (
-      <div>
-        {article ? (
-          <PageLayout>
-            <div className='content-area mx-auto mt-8'>
-              <h2 className='text-3xl font-semibold title tracking-wider'>
-                {article.title}
-              </h2>
+      <PageLayout>
+        <Helmet>
+          <title>{`${article.title} - Author's Haven`}</title>
+        </Helmet>
+        <div className='content-area mx-auto mt-8'>
+          <h2 className='text-3xl font-semibold title tracking-wider'>
+            {article.title}
+          </h2>
 
-              <div className='my-8 flex items-center'>
-                <img
-                  className='w-20 h-20 rounded-full mr-4'
-                  src={article.author.profile.avatar || this.defaultAvatar}
-                  alt='Avatar of Jonathan Reinink'
-                />
-                <div className='ml-4'>
-                  <h4 className='text-base'>
-                    {article.author.username.toUpperCase()}
-                  </h4>
-                  <div className='flex items-center text-sm text-gray-600'>
-                    <p>{moment(article.createdAt).format('MMM DD, YYYY')}</p>
-                    <span className='mx-3 text-lg text-black my-auto'>.</span>
-                    <p>{`${calculateRT(body, 400)} read`}</p>
-                  </div>
-                  <ArticleRating
-                    averageRating={
-                      article.averageRating ? article.averageRating : 0
-                    }
-                  />
-                </div>
+          <div className='my-8 flex items-center'>
+            <img
+              className='w-12 h-12 rounded-full mr-4'
+              src={article.author.profile.avatar || this.defaultAvatar}
+              alt='Avatar of Jonathan Reinink'
+            />
+            <div className='ml-4'>
+              <h4 className='text-sm'>
+                {fullname === ' '
+                  ? this.formatString(article.author.username)
+                  : fullname}
+              </h4>
+              <div className='flex items-center text-sm text-gray-600'>
+                <p className='text-xs'>
+                  {moment(article.createdAt).format('MMM DD, YYYY')}
+                </p>
+                <span className='mx-3 text-black my-auto'>.</span>
+                <p className='text-xs'>1 mins read</p>
               </div>
-
-              <div className='text-lg body'>{ReactHtmlParser(body)}</div>
-
-              <div className='py-5 border-b-2'>
-                <Tags tags={tags} />
-              </div>
-
-              <CommentsContainer slug={article.slug} />
+              <ArticleRating
+                averageRating={
+                  article.averageRating ? article.averageRating : 0
+                }
+              />
             </div>
-          </PageLayout>
-        ) : (
-          ''
-        )}
-      </div>
+          </div>
+
+          <div className='text-lg body'>{ReactHtmlParser(body)}</div>
+
+          <div className='py-5 border-b-2'>
+            <Tags tags={tags} />
+          </div>
+
+          <div className='comments my-4'>
+            <h2 className='text-lg font-semibold comment-res'>Responses</h2>
+          </div>
+
+          <CommentsContainer slug={article.slug} />
+        </div>
+      </PageLayout>
     );
   }
 }

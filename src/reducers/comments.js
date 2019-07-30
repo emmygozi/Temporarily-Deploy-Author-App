@@ -4,6 +4,8 @@ import {
 
 const initialState = {
   comments: [],
+  likedComment: {},
+  unlikedComment: {},
   errors: {}
 };
 
@@ -29,22 +31,26 @@ export default (state = initialState, action) => {
 
     case LIKE_COMMENT:
       return {
-        ...state
+        ...state,
+        likedComment: action.payload
       };
 
     case LIKE_COMMENT_ERROR:
       return {
-        ...state
+        ...state,
+        errors: action.payload
       };
 
     case UNLIKE_COMMENT:
       return {
-        ...state
+        ...state,
+        unlikedComment: action.payload
       };
 
     case UNLIKE_COMMENT_ERROR:
       return {
-        ...state
+        ...state,
+        errors: action.payload
       };
 
     default: return state;

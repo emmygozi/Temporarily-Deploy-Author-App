@@ -16,8 +16,8 @@ import {
 import { fetchArticles } from './articles';
 
 axios.defaults.baseURL =
- // 'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
-'http://localhost:3000/api/v1';
+ 'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
+// 'http://localhost:3000/api/v1';
 
 export const setAuthToken = token => {
   if (token) {
@@ -145,15 +145,15 @@ export const userActivated = (userParams, history) => async dispatch => {
     const response = res.data;
     if (res.status === 200) {
       dispatch({ type: ACTIVATE_SUCCESS, payload: response });
-      toast.success("Account verified!");
-      history.push("/");
+      toast.success('Account verified!');
+      history.push('/');
       return response;
     }
   } catch (err) {
     if (err) {
-      toast.error("Your verification token is expired!");
+      toast.error('Your verification token is expired!');
       dispatch({ type: ACTIVATE_FAILURE, payload: err.response.data.errors });
-      history.push("/");
+      history.push('/');
     }
   }
 };

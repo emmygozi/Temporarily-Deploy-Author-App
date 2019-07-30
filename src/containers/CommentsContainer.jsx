@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Footer from '@components/commons/utilities/Footer';
-import CommentCard from '../components/commons/Cards/CommentCard';
+import { getComments, postComment, delComment, likeComment, unlikeComment } from '@actions/comments';
+import CommentCard from '@components/commons/Cards/CommentCard';
 import CreateCommentCard from '../components/commons/Cards/CreateCommentCard';
-import { getComments, postComment, delComment, likeComment, unlikeComment } from '../actions/comments';
 import formatDate from '../components/commons/utilities/helpers'
 
 /**
@@ -20,8 +20,8 @@ export class CommentsContainer extends Component {
     super(props);
     this.state = {
       comment: '',
-      userLike: false,
-      errors: {}
+      errors: {},
+      toggle: false
     }
     const { slug } = this.props;
     const { getComments: loadComments } = this.props;
@@ -59,7 +59,7 @@ export class CommentsContainer extends Component {
       const { postComment } = this.props;
       const newComment = { comment }
       postComment(newComment, slug);
-      this.clearComment();
+      this.clearComment(e);
     }
   }
 
@@ -78,15 +78,10 @@ export class CommentsContainer extends Component {
    * @memberof CommentsContainer
    */
   createCommentListings = (comments) => {
-    const { user } = this.props;
-    let userLike = false;
-
     const data = comments && comments.map(comment => {
-      const date = formatDate(comment.createdAt);
-      if (comment.CommentLikes.filter(like => like.userId === user.id).length > 0) {
-        userLike = !userLike;
-      }
+      const { CommentLikes } = comment;
 
+      const date = formatDate(comment.createdAt);
       return (
         <CommentCard
           key={comment.id}
@@ -94,9 +89,10 @@ export class CommentsContainer extends Component {
           alt={comment.author.username}
           body={comment.body}
           avatar={comment.author.profile.avatar}
-          createdAt={date.long}
+          author={comment.author}
+          createdAt={date.short}
           likes={comment.CommentLikes.length}
-          userLike={userLike}
+          userLike={this.findLike(CommentLikes)}
           like={() => this.handleLikes(comment.id)}
           del={() => this.deleteComment(comment.id)}
         />
@@ -111,11 +107,35 @@ export class CommentsContainer extends Component {
    * Clear comment textarea
    * @memberof CommentsContainer
    */
-  clearComment = () => {
+  clearComment = (e) => {
+    e.preventDefault();
     this.setState({
       comment: '',
-      errors: {}
+      errors: {},
+      toggle: false
     });
+  }
+
+  toggleComment = () => {
+    this.setState({
+      toggle: true,
+    });
+  }
+
+  /**
+   *
+   * @param {*} CommentLikes
+   * @returns
+   * @memberof CommentsContainer
+   */
+  findLike(CommentLikes) {
+    let { user } = this.props;
+
+    if (CommentLikes.filter(like => like.userId === user.id).length > 0) {
+      return true
+    } else {
+      return false
+    }
   }
 
   /**
@@ -152,25 +172,35 @@ export class CommentsContainer extends Component {
   }
 
   render() {
-    const { comments, user, profile: { avatar } } = this.props;
-    const { comment, errors } = this.state;
+    const { comments, user, profile: { avatar }, isAuthenticated } = this.props;
+    const { comment, errors, toggle } = this.state;
 
     const data = this.createCommentListings(comments);
 
     return (
       <Fragment>
-        <CreateCommentCard
-          name={user.username}
-          avatar={
-            avatar ||
-            "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"
-          }
-          onChange={this.onChange}
-          submit={this.onSubmit}
-          reset={this.clearComment}
-          value={comment}
-          commentError={errors.commentError}
-        />
+        {toggle ? (
+          <CreateCommentCard
+            name={user.username}
+            avatar={
+              avatar ||
+              "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"
+            }
+            onChange={this.onChange}
+            submit={this.onSubmit}
+            reset={this.clearComment}
+            value={comment}
+            commentError={errors.commentError}
+          />
+        ) : (isAuthenticated ? (
+          <div className="w-full mb-6 border cursor-text shadow" onClick={this.toggleComment} onKeyDown={this.toggleComment} role="presentation">
+            <div className="flex p-4 items-center">
+              <img src={avatar || "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png"} alt="avatar" className="w-8 h-8 rounded-full" />
+              <div className="ml-8 font-serif text-gray-500">Write a response...</div>
+            </div>
+          </div>
+        ) : '')
+        }
         {data}
         <Footer />
       </Fragment>
@@ -195,6 +225,7 @@ CommentsContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
   comments: state.comments.comments,
   user: state.auth.user,
   profile: state.auth.profile

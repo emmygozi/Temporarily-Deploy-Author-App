@@ -175,6 +175,7 @@ class NewArticle extends Component {
                       handleAddition={this.handleAddition}
                       handleDrag={this.handleDrag}
                       handleTagClick={this.handleTagClick}
+                      inputFieldPosition="bottom"
                       placeholder="Add a tag"
                       classNames={{
                         tags: 'tagsClass',

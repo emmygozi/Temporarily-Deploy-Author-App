@@ -32,6 +32,7 @@ class Profile extends Component {
     }
 
   }
+
   render() {
     const { user, isAuthenticated} = this.props;
     let { profile, guest } = this.props;
@@ -50,26 +51,28 @@ class Profile extends Component {
           <div className="profile-container">
             <ProfileImage profile={profile} user={user} isMyProfile={isMyProfile} />
           </div>
-          <ul className="justify-center flex py-2 border-b-2 font-sans ">
-            {tabs.map(tab => {
-        return (
-          <li key={tab} className="w-30 text-center">
-            <a
-              onClick={(e) => {
-                e.preventDefault()
-                this.setState({
-                  clickedTab: tab
-                })
-              }} 
-              href={tab}
-              className={`${(tab === clickedTab ? 'active': '')} text-center mr-8 text-gray text-sm hover:font-bold px-5`}
-            >
-              {tab}
-            </a>
-          </li>
-        )
-      })}
-          </ul>
+          <div className="container mx-auto">
+            <ul className="justify-center flex py-2 border-b-2 font-sans ">
+              {tabs.map(tab => {
+                return (
+                  <li key={tab} className="w-30 text-center">
+                    <a
+                      onClick={(e) => {
+                        e.preventDefault()
+                        this.setState({
+                          clickedTab: tab
+                        })
+                      }} 
+                      href={tab}
+                      className={`${(tab === clickedTab ? 'active': '')} text-center mr-8 text-gray text-sm hover:font-bold px-5`}
+                    >
+                      {tab}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
           <div className="flex-1">
             <ProfileDisplay tab={clickedTab} />
           </div>

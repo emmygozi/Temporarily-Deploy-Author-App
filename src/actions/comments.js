@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   GET_COMMENTS, GET_COMMENTS_ERROR, POST_COMMENT, POST_COMMENT_ERROR, DELETE_COMMENT, DELETE_COMMENT_ERROR, LIKE_COMMENT, LIKE_COMMENT_ERROR, UNLIKE_COMMENT, UNLIKE_COMMENT_ERROR
 } from './types';
@@ -27,11 +28,13 @@ export const postComment = (newComment, slug) => async (dispatch) => {
       type: POST_COMMENT,
       payload: res.data.payload
     })
+    toast.success('Your comment has been added');
   } catch (err) {
     dispatch({
       type: POST_COMMENT_ERROR,
       payload: err.response.data
     })
+    toast.error(err.response.data.errors.global);
   }
 };
 
