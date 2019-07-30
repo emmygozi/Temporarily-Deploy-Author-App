@@ -99,6 +99,10 @@ ul {
   .ce-paragraph {
     font-size: 1em;
   }
+
+  .react-rater > div {
+    margin-right: .3em;
+  }
 }
 
 .comment-res {
@@ -163,4 +167,22 @@ ul {
 
 button:disabled {
   cursor: not-allowed !important;
+}
+
+.react-rater {
+  margin-top: 10px;
+  transition: all 200ms ease-in-out;
+  transform-origin: left;
+}
+
+.react-rater > div {
+  margin-right: .1em;
+}
+
+.react-rater-star:hover, .react-rater-star.is-active, .react-rater-star.will-be-active {
+  color: $base-color;
+}
+
+.react-rater:hover {
+  transform: scale(1.5);
 }

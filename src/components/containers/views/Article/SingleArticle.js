@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SingleArticle from '@components/views/Article/SingleArticle';
-import { getSingleArticle, getAllTags } from '@actions/articles';
+import { getSingleArticle, getAllTags, updateRatings } from '@actions/articles';
 
 const mapStateToProps = state => ({
   loading: state.article.loading,
@@ -11,5 +11,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getSingleArticle, getAllTags }
+  { getSingleArticle, getAllTags, updateRatings }
 )(SingleArticle);

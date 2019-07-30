@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {
@@ -86,6 +87,11 @@ export const getTagsFailure = errors => ({
   type: GET_TAGS_FAILURE,
   payload: errors
 });
+
+export const updateRatings = (rate, articleSlug) => async () => {
+  const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
+  console.log(response.data.payload);
+}
 
 export const createNewArticle = (data, history) => async dispatch => {
   try {
