@@ -89,8 +89,12 @@ export const getTagsFailure = errors => ({
 });
 
 export const updateRatings = (rate, articleSlug) => async () => {
-  const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
-  console.log(response.data.payload);
+  try {
+    const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
+    console.log(response.data.payload);
+  } catch (err) {
+    toast.error(err.response.data.errors.global);
+  }
 }
 
 export const createNewArticle = (data, history) => async dispatch => {
