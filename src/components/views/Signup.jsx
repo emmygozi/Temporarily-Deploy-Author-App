@@ -29,7 +29,7 @@ export class Signup extends Component {
       case "username":
         errors.username =
           (aValue.length < 3 && aValue.length > 0) || aValue.length === 0
-            ? "minimum 3 characters required"
+            ? "Minimum 3 characters required"
             : "";
         break;
       case "email":
@@ -41,7 +41,7 @@ export class Signup extends Component {
       case "password":
         errors.password =
           (aValue.length < 6 && aValue.length > 0) || aValue.length === 0
-            ? "minimum 6 characters required"
+            ? "Minimum 6 characters required"
             : "";
         break;
       case "confirmpass":

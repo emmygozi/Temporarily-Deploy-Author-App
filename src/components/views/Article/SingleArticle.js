@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import Rater from 'react-rater';
 import Tags from '@components/commons/Cards/Tags';
 import ReactHtmlParser from 'react-html-parser';
 import Helmet from 'react-helmet';
@@ -8,8 +9,9 @@ import { calculateRT } from "@components/commons/Cards/Article";
 import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
 import Preloader from '@components/commons/Preloader';
-import CommentsContainer from '@containers/CommentsContainer';
+import CommentsContainer from '../../../containers/CommentsContainer';
 import convertToJSON from '../../../helpers/convertToJSON';
+import 'react-rater/lib/react-rater.css'
 import './index.scss';
 
 class SingleArticle extends PureComponent {
@@ -35,7 +37,9 @@ class SingleArticle extends PureComponent {
       })
     }).isRequired,
     getSingleArticle: PropTypes.func.isRequired,
-    getAllTags: PropTypes.func.isRequired
+    getAllTags: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
+    rating: PropTypes.number.isRequired,
   };
 
   constructor(props) {
@@ -43,7 +47,9 @@ class SingleArticle extends PureComponent {
 
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
-  }
+
+    }
+
 
   componentDidMount() {
     const {
@@ -86,8 +92,17 @@ class SingleArticle extends PureComponent {
     return convertToJSON(JSON.parse(raw));
   };
 
+  rateArticle = rated => {
+    const { article, updateRatings } = this.props;
+    const rate = {
+      rate: rated.rating
+    }
+    updateRatings(rate, article.slug);
+  }
+
   render() {
-    const { article, tags } = this.props;
+    const { article, tags, isAuthenticated, rating } = this.props;
+    
     if (!article.author) {
       return (
         <Preloader
@@ -137,9 +152,7 @@ class SingleArticle extends PureComponent {
                 <p className='text-xs'>{`${calculateRT(article.body, 300)} read`}</p>
               </div>
               <ArticleRating
-                averageRating={
-                  article.averageRating ? article.averageRating : 0
-                }
+                averageRating={rating ? rating : 0}
               />
             </div>
           </div>
@@ -148,7 +161,9 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
+            <Rater total={5} rating={rating ? rating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
+
 
           <div className='comments my-4'>
             <h2 className='text-lg font-semibold comment-res'>Responses</h2>

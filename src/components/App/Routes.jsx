@@ -24,7 +24,7 @@ const Routes = () => (
       <Route exact path="/article/:articleId/edit" component={AuthorizeArticle(Authenticator(EditArticle))} />
       <Route exact path="/profile/:username" component={Profile} />
       <Route exact path="/profile/:username/edit" component={EditProfile} />
-      
+
       <Route path="*" component={NotFound} />
     </Switch>
   </Router>
