@@ -14,7 +14,8 @@ import {
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
-  SET_NEXT_PAGE
+  SET_NEXT_PAGE,
+  UPDATE_ARTICLE_RATING
 } from '@actions/types';
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   tags: [],
   articles: [],
   article: {},
+  ratings: 0,
   loadingMore: false,
   nextPage: {}
 };
@@ -33,6 +35,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: true
+      };
+    case UPDATE_ARTICLE_RATING:
+      return {
+        ...state,
+        ratings: action.payload
       };
     case GET_ARTICLES_SUCCESS:
       return {

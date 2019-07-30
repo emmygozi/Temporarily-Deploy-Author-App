@@ -8,6 +8,7 @@ const mapStateToProps = state => ({
   tags: state.article.tags,
   errors: state.article.errors,
   isAuthenticated: state.auth.isAuthenticated,
+  rating: state.article.ratings
 });
 
 export default connect(

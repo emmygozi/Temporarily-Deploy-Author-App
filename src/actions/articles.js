@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {
@@ -17,11 +16,17 @@ import {
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
-  CLEAR_SINGLE_ARTICLE
+  CLEAR_SINGLE_ARTICLE,
+  UPDATE_ARTICLE_RATING
 } from './types';
 
 export const isLoading = () => ({
   type: IS_LOADING
+});
+
+export const updateRating = rate => ({
+  type: UPDATE_ARTICLE_RATING,
+  payload: rate
 });
 
 export const addArticleSuccess = article => ({
@@ -88,10 +93,10 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
-export const updateRatings = (rate, articleSlug) => async () => {
+export const updateRatings = (rate, articleSlug) => async dispatch => {
   try {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
-    console.log(response.data.payload);
+    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (err) {
     toast.error(err.response.data.errors.global);
   }

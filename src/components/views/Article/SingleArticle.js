@@ -38,7 +38,8 @@ class SingleArticle extends PureComponent {
     }).isRequired,
     getSingleArticle: PropTypes.func.isRequired,
     getAllTags: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired
+    isAuthenticated: PropTypes.bool.isRequired,
+    rating: PropTypes.number.isRequired,
   };
 
   constructor(props) {
@@ -100,8 +101,8 @@ class SingleArticle extends PureComponent {
   }
 
   render() {
-    const { article, tags, isAuthenticated } = this.props;
-
+    const { article, tags, isAuthenticated, rating } = this.props;
+    
     if (!article.author) {
       return (
         <Preloader
@@ -151,7 +152,7 @@ class SingleArticle extends PureComponent {
                 <p className='text-xs'>{`${calculateRT(article.body, 300)} read`}</p>
               </div>
               <ArticleRating
-                averageRating={article.averageRating ? article.averageRating : 0}
+                averageRating={rating ? rating : 0}
               />
             </div>
           </div>
@@ -160,7 +161,7 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={article.averageRating ? article.averageRating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <Rater total={5} rating={rating ? rating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
 
 
