@@ -164,7 +164,7 @@ class SingleArticle extends PureComponent {
                 <p className='text-xs'>{`${calculateRT(article.body, 300)} read`}</p>
               </div>
               <ArticleRating
-                averageRating={rating ? rating : 0}
+                averageRating={rating ? rating : 0} 
               />
             </div>
           </div>
