@@ -17,7 +17,11 @@ import {
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
-  UPDATE_ARTICLE_RATING
+  UPDATE_ARTICLE_RATING,
+  ARTICLE_LIKE_SUCCESS,
+  ARTICLE_LIKE_ERROR,
+  ARTICLE_UNLIKE_SUCCESS,
+  ARTICLE_UNLIKE_ERROR
 } from './types';
 
 export const isLoading = () => ({
@@ -202,5 +206,37 @@ export const fetchMoreArticles = nextPage => async dispatch => {
     dispatch(setNextPage(response.data.payload.metadata));
   } catch (error) {
     dispatch(fetchMoreArticlesFailure(error.response.data.errors.global));
+  }
+};
+
+// Like an article
+export const likeArticle = (slug) => async (dispatch) => {
+  try {
+    const res = await axios.post(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_LIKE_SUCCESS,
+      payload: res.data.payload
+    })
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_LIKE_ERROR,
+      payload: err.response.data.errors.global
+    })
+  }
+};
+
+// Unlike an article
+export const unlikeArticle = (slug) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_UNLIKE_SUCCESS,
+      payload: res.data.payload
+    })
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_UNLIKE_ERROR,
+      payload: err.response.data.errors.global
+    })
   }
 };
