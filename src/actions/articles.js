@@ -98,7 +98,7 @@ export const fetchRatings = articleSlug => async dispatch => {
     const response = await axios.get(`/articles/${articleSlug}`);
     dispatch(updateRating(Number(response.data.payload.averageRating), 10));
   } catch (err) {
-    toast.error(err.response.data.errors.global);
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
 };
 
@@ -107,7 +107,7 @@ export const updateRatings = (rate, articleSlug) => async dispatch => {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
     dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (err) {
-    toast.error(err.response.data.errors.global);
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
 }
 

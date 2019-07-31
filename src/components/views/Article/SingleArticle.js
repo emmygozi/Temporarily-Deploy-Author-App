@@ -173,7 +173,7 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={rate ? rate : rating} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <Rater total={5} rating={rate} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
 
 
