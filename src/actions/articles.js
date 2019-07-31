@@ -17,7 +17,7 @@ import {
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
-  UPDATE_ARTICLE_RATING
+  UPDATE_ARTICLE_RATING,
 } from './types';
 
 export const isLoading = () => ({
@@ -93,6 +93,15 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
+export const fetchRatings = articleSlug => async dispatch => {
+  try {
+    const response = await axios.get(`/articles/${articleSlug}`);
+    dispatch(updateRating(Number(response.data.payload.averageRating), 10));
+  } catch (err) {
+    toast.error(err.response.data.errors.global);
+  }
+};
+
 export const updateRatings = (rate, articleSlug) => async dispatch => {
   try {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
@@ -155,10 +164,10 @@ export const getSingleArticle = id => async dispatch => {
   try {
     dispatch(isLoading());
     dispatch(clearSingleArticle());
-
     const response = await axios.get(`/articles/${id}`);
-
     dispatch(fetchArticleSuccess(response.data.payload));
+    
+    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
