@@ -40,6 +40,8 @@ class SingleArticle extends PureComponent {
     getAllTags: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     rating: PropTypes.number.isRequired,
+    updateRatings: PropTypes.func.isRequired,
+    fetchRatings: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -47,9 +49,14 @@ class SingleArticle extends PureComponent {
 
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
+      this.state = {
+        rate: 0
+      }
 
+      const { article, fetchRatings } = props;
+      fetchRatings(article.slug);
+      
     }
-
 
   componentDidMount() {
     const {
@@ -60,6 +67,7 @@ class SingleArticle extends PureComponent {
     const { getSingleArticle, getAllTags } = this.props;
     getSingleArticle(articleId);
     getAllTags(articleId);
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -94,6 +102,9 @@ class SingleArticle extends PureComponent {
 
   rateArticle = rated => {
     const { article, updateRatings } = this.props;
+    this.setState({
+      rate: rated.rating
+    })
     const rate = {
       rate: rated.rating
     }
@@ -102,6 +113,7 @@ class SingleArticle extends PureComponent {
 
   render() {
     const { article, tags, isAuthenticated, rating } = this.props;
+    const { rate } = this.state;
     
     if (!article.author) {
       return (
@@ -161,7 +173,7 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={rating ? rating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <Rater total={5} rating={rate ? rate : rating} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
 
 
