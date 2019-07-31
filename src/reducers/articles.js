@@ -14,7 +14,8 @@ import {
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
-  SET_NEXT_PAGE
+  SET_NEXT_PAGE,
+  SET_GROUP_ARTICLES
 } from '@actions/types';
 
 const initialState = {
@@ -24,7 +25,8 @@ const initialState = {
   articles: [],
   article: {},
   loadingMore: false,
-  nextPage: {}
+  nextPage: {},
+  categories: {}
 };
 
 export default (state = initialState, action) => {
@@ -96,6 +98,11 @@ export default (state = initialState, action) => {
         ...state,
         nextPage: action.payload
       };
+    case SET_GROUP_ARTICLES:
+      return {
+        ...state,
+        categories: action.payload
+      }
     default:
       return state;
   }

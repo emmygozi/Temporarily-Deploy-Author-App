@@ -16,7 +16,8 @@ import {
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
-  CLEAR_SINGLE_ARTICLE
+  CLEAR_SINGLE_ARTICLE,
+  SET_GROUP_ARTICLES
 } from './types';
 
 export const isLoading = () => ({
@@ -87,6 +88,11 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
+export const setArticleCategories = group => ({
+  type: SET_GROUP_ARTICLES,
+  payload: group
+});
+
 export const createNewArticle = (data, history) => async dispatch => {
   try {
     dispatch(isLoading());
@@ -117,12 +123,43 @@ export const editArticle = (id, data, history) => async dispatch => {
 export const fetchArticles = () => async dispatch => {
   try {
     dispatch(isLoading());
-    const response = await axios.get('/articles');
-    dispatch(fetchArticlesSuccess(response.data.payload.rows));
+    const response = await axios.get('/articles?page=1&limit=20');
+    const articles = response.data.payload.rows;
+
+    const categories = await dispatch(
+      fetchArticleTags(['family', 'andela', 'people'], articles)
+    );
+
+    dispatch(fetchArticlesSuccess(articles));
     dispatch(setNextPage(response.data.payload.metadata));
+    dispatch(setArticleCategories(categories));
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
   }
+};
+
+export const fetchArticleTags = (tagNames, articles) => async dispatch => {
+  let groups = {};
+  try {
+    const response = await axios.get('/tags');
+    tagNames.map(tagName => {
+      const fullFilterDetails = [];
+      response.data.payload
+        .filter(item =>
+          item.tags.find(tag => tag.toLowerCase() === tagName.toLowerCase())
+        )
+        .map(tag => {
+          articles.map(article => {
+            article.slug === tag.slug && fullFilterDetails.push(article);
+          });
+        });
+
+      groups[tagName] = fullFilterDetails;
+    });
+  } catch (error) {
+    dispatch(getTagsFailure(error.response.data.errors.global));
+  }
+  return groups;
 };
 
 export const getAllTags = slug => async dispatch => {

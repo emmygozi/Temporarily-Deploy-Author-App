@@ -1,27 +1,45 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import moment from 'moment';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel';
 import Header from '@components/commons/Header';
 import NavBar from '@components/commons/NavBar';
-import ArticleCard from '@components/commons/Cards/Article';
+import ArticleCard, {
+  extractArticleDetails
+} from '@components/commons/Cards/Article';
 import { fetchArticles, fetchMoreArticles } from '@actions/articles';
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      currentArticle: {},
+      currentIndex: 0,
+      isMounting: true
+    };
+    this.articles = [];
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { fetchArticles } = this.props;
-    fetchArticles();
+    await fetchArticles();
+    this.setState({ isMounting: false });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { mostRated } = this.groupArticles(nextProps.articles);
+    this.setState({ currentArticle: mostRated[0], currentIndex: 0 });
   }
 
   displaySmallArticle = (article, stretch) => {
     return (
       <ArticleCard
-        key={article.id}
+        key={Math.random()}
         isSmall
         article={article}
         stretch={stretch}
@@ -30,13 +48,101 @@ class Home extends Component {
   };
 
   displayBigArticle = article => {
+    const {
+      title,
+      body,
+      fullName,
+      username,
+      time,
+      slug,
+      readTime
+    } = extractArticleDetails(article);
+    const { currentIndex } = this.state;
     return (
-      <ArticleCard
-        key={Math.random().toString()}
-        isSmall={false}
-        article={article}
-      />
+      <div
+        className={classNames('text-sm mt-2 content-center', {
+          'current-slider-anim1': currentIndex % 2 === 0,
+          'current-slider-anim2': currentIndex % 2 === 1
+        })}
+      >
+        <Link to={`/article/${slug}`}>
+          <h2 className='font-semibold text-lg hover:text-blue-700 overflow-hidden h-6 mb-1'>
+            {title}
+          </h2>
+        </Link>
+        <p className='text-gray-600 h-10 overflow-hidden'>
+          {body.length > 240 ? `${body.slice(0, 240)}...` : body}
+        </p>
+        <Link to={`/profile/${username}`} className='mr-3 hover:text-blue-700'>
+          {fullName === ' ' ? username : fullName}
+        </Link>
+        <div className='font-thin text-gray-600 text-xs'>
+          <span>{time}</span>
+          <span className='mx-2 text-black font-bold'>.</span>
+          <span>{`${readTime} read`}</span>
+        </div>
+      </div>
     );
+  };
+
+  getMostRatedArticles = articles => {
+    if (articles[0]) {
+      const sortedArticles = articles.sort((a, b) =>
+        (a.averageRating || 0) < (b.averageRating || 0)
+          ? 1
+          : (b.averageRating || 0) < (a.averageRating || 0)
+          ? -1
+          : 0
+      );
+      return sortedArticles.slice(0, 10);
+    }
+    return [];
+  };
+
+  getMostRecent = articles => {
+    if (articles[0]) {
+      const sortedArticles = articles.sort((a, b) =>
+        (moment(a.createdAt).format('x') || 0) <
+        (moment(b.createdAt).format('x') || 0)
+          ? 1
+          : (moment(b.createdAt).format('x') || 0) <
+            moment(a.createdAt).format('x')
+          ? -1
+          : 0
+      );
+      return sortedArticles.slice(0, 3);
+    }
+    return [];
+  };
+
+  groupArticles = articles => {
+    const {
+      categories: { family, andela, people }
+    } = this.props;
+
+    const mostRated = this.getMostRatedArticles(articles);
+    const mostRecent = this.getMostRecent(articles);
+    let others = [];
+
+    if (family) {
+      let allGroups = family.concat(andela, people);
+      articles.map(article => {
+        const found = allGroups.find(item => item.slug === article.slug);
+        if (!found) {
+          others.push(article);
+        }
+        return found;
+      });
+    }
+    return { mostRated, mostRecent, others, family, andela, people };
+  };
+
+  clickedArticle = () => {
+    const { history } = this.props;
+    const {
+      currentArticle: { slug }
+    } = this.state;
+    history.push(`/article/${slug}`);
   };
 
   smallArticleLoader = () => (
@@ -69,6 +175,51 @@ class Home extends Component {
     }
   };
 
+  changeBigArticle = index => {
+    const { mostRated } = this.groupArticles(this.articles);
+    this.setState({ currentArticle: mostRated[index], currentIndex: index });
+  };
+
+  getArticleGroup = category => {
+    let articleGroup = [];
+
+    if (!category) return articleGroup;
+
+    const categoryTag = category.map(article => {
+      const { image, title, slug, fullName, username } = extractArticleDetails(
+        article
+      );
+      return (
+        <div
+          className='bg-white shadow-md mb-2 rounded overflow-hidden hover:shadow-lg card--content'
+          key={`item-${slug}`}
+        >
+          <Link to={`/article/${slug}`}>
+            <div>
+              <div className='item' key={Math.random()}>
+                <img
+                  src={image}
+                  alt={title}
+                  className='h-32 object-cover w-full slider-image'
+                />
+              </div>
+              <div className='w-11/12 mx-auto mt-2'>
+                <div className='w-full text-gray-700 text-sm line-tight h-12'>
+                  {title}
+                </div>
+                <div className='w-full text-gray-500 text-xs line-tight text-left mb-2'>
+                  {fullName === ' ' ? username : fullName}
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      );
+    });
+
+    return categoryTag;
+  };
+
   render() {
     let {
       user,
@@ -79,9 +230,20 @@ class Home extends Component {
       next,
       loadingMore
     } = this.props;
-    const mainArticle = articles.slice(0, 1);
-    const subArticles = articles.slice(1, 4);
-    const remainingArticles = articles.slice(4);
+    this.articles = articles;
+
+    const {
+      mostRated,
+      mostRecent,
+      others,
+      family,
+      andela,
+      people
+    } = this.groupArticles(articles);
+    const { currentArticle, currentIndex, isMounting } = this.state;
+    const familyTags = this.getArticleGroup(family);
+    const andelaTags = this.getArticleGroup(andela);
+    const peopleTags = this.getArticleGroup(people);
 
     return (
       <div
@@ -95,30 +257,7 @@ class Home extends Component {
         />
         <NavBar />
 
-        {!loading ? (
-          <div className='container mx-auto mt-6 p-4'>
-            <div className='flex flex-col lg:flex-row max-h-lg'>
-              <div>
-                {mainArticle.length > 0
-                  ? this.displayBigArticle(mainArticle[0])
-                  : ''}
-              </div>
-              <div className='md:pl-8 flex flex-col justify-between lg:pb-24 lg:mb-8'>
-                {subArticles.map(article =>
-                  this.displaySmallArticle(article, true)
-                )}
-              </div>
-            </div>
-
-            <div className='w-full border bg-black mb-2 mt-2 hidden md:block' />
-
-            <div className='flex flex-wrap'>
-              {remainingArticles.map(article =>
-                this.displaySmallArticle(article)
-              )}
-            </div>
-          </div>
-        ) : (
+        {loading || isMounting ? (
           <Fragment>
             <div className='container mx-auto md:flex'>
               <div className='w-full p-2 h-64 md:w-2/3 mb-2 overflow-hidden'>
@@ -152,6 +291,81 @@ class Home extends Component {
               </div>
             </div>
           </Fragment>
+        ) : (
+          <div className='container mx-auto mt-2 p-4'>
+            <h1 className='text-gray-600 mb-4 text-sm font-semibold uppercase'>
+              Top Rated
+            </h1>
+            <div className='flex flex-col lg:flex-row max-h-lg'>
+              {mostRated[0] && (
+                <div className='max-w-5xl'>
+                  <div className='big-article rounded overflow-hidden shadow cursor-pointer'>
+                    <Carousel
+                      infiniteLoop
+                      useKeyboardArrows
+                      interval={4000}
+                      emulateTouch
+                      autoPlay
+                      showStatus={false}
+                      showThumbs={false}
+                      stopOnHover
+                      transitionTime={1000}
+                      onChange={this.changeBigArticle}
+                      onClickItem={this.clickedArticle}
+                      selectedItem={currentIndex}
+                    >
+                      {mostRated.map(article => {
+                        const { image, title, slug } = extractArticleDetails(
+                          article
+                        );
+                        return (
+                          <img
+                            src={image}
+                            alt={title}
+                            key={slug}
+                            className='w-full big-article object-cover h-screen'
+                          />
+                        );
+                      })}
+                    </Carousel>
+                  </div>
+                  {currentArticle.author &&
+                    this.displayBigArticle(currentArticle)}
+                </div>
+              )}
+              <div className='md:pl-8 flex flex-col justify-between lg:pb-24 lg:mb-8'>
+                <h1 className='text-gray-600 mb-4 text-sm font-semibold uppercase lg:-mt-10 lg:pt-1 '>
+                  Most Recent
+                </h1>
+                {mostRecent.map(article =>
+                  this.displaySmallArticle(article, true)
+                )}
+              </div>
+            </div>
+            <div className='w-full border bg-black mb-2 mt-2 hidden md:block' />
+
+            <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
+              Family
+            </h1>
+            <section className='card'>{familyTags}</section>
+
+            <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
+              Andela
+            </h1>
+            <section className='card'>{andelaTags}</section>
+
+            <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
+              People
+            </h1>
+            <section className='card'>{peopleTags}</section>
+
+            <h1 className='text-gray-600 mt-4 text-sm font-semibold uppercase'>
+              More
+            </h1>
+            <div className='flex flex-wrap'>
+              {others.map(article => this.displaySmallArticle(article))}
+            </div>
+          </div>
         )}
         {next === '' && !loading && !loadingMore ? (
           <div className='justify-center text-sm italic text-gray-500 text-center mb-6'>
@@ -196,7 +410,8 @@ Home.propTypes = {
   fetchMoreArticles: PropTypes.func.isRequired,
   nextPage: PropTypes.shape({ next: PropTypes.string }).isRequired,
   next: PropTypes.string,
-  loadingMore: PropTypes.bool.isRequired
+  loadingMore: PropTypes.bool.isRequired,
+  categories: PropTypes.object.isRequired
 };
 
 Home.defaultProps = {
@@ -211,7 +426,8 @@ const mapStateToProps = state => ({
   articles: state.article.articles,
   loading: state.article.loading,
   nextPage: state.article.nextPage,
-  loadingMore: state.article.loadingMore
+  loadingMore: state.article.loadingMore,
+  categories: state.article.categories
 });
 
 export default connect(

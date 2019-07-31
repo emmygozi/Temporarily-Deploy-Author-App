@@ -304,7 +304,8 @@ export class Header extends Component {
                   fullName,
                   username,
                   time,
-                  slug
+                  slug,
+                  image
                 } = extractArticleDetails(article, true);
                 return (
                   <SearchCard
@@ -314,6 +315,7 @@ export class Header extends Component {
                     name={fullName === ' ' ? username : fullName}
                     createdAt={time}
                     slug={slug}
+                    image={image}
                   />
                 );
               })}

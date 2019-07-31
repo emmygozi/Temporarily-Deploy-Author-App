@@ -1,8 +1,12 @@
 $base-color: #335bcf;
 $base-hover-color: rgb(50, 82, 177);
 $tool-tip-color: rgb(20, 20, 20);
+$itemGrow: 1.2;
+$duration: 250ms;
 
-input:focus, textarea:focus, select:focus{
+input:focus,
+textarea:focus,
+select:focus {
   outline: none !important;
 }
 
@@ -123,5 +127,79 @@ button:disabled {
 }
 
 .big-article {
-  max-height: 400px;
+  max-height: 390px;
+}
+
+.control-arrow:hover {
+  background: transparent !important;
+}
+
+.current-slider-anim1 {
+  transition: opacity 500ms ease-in-out;
+  animation: spy 500ms linear;
+}
+
+.current-slider-anim2 {
+  transition: opacity 500ms ease-in-out;
+  animation: spy2 500ms linear;
+}
+
+@keyframes spy {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: .2;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes spy2 {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: .2;
+  }
+
+
+  100% {
+    opacity: 1;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.slider-image {
+  min-width: 300px;
+}
+
+.card {
+  display: flex;
+  min-width: 100%;
+  max-height: 300px;
+  overflow-x: auto;
+}
+
+.card::-webkit-scrollbar {
+  display: none;
+}
+
+.card--content {
+  min-width: 250px;
+  max-width: 250px;
+  margin-right: 20px;
+}
+
+.search-image {
+  min-width: 115px;
+  overflow: hidden;
+  height: 105px;
 }

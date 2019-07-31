@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import HTMLParser from 'react-html-parser';
+import Ellipsis from 'react-ellipsis-pjs';
 import Gravatar from '@base/img/article.jpg';
 import { formatDate } from '@utils/formatDate';
 
@@ -17,7 +17,7 @@ export const calculateRT = (text, wordsPerMinute = 100) => {
   return result;
 };
 
-export const extractArticleDetails = (article, isSmall) => {
+export const extractArticleDetails = article => {
   const {
     author: {
       profile: { firstname, lastname },
@@ -27,7 +27,8 @@ export const extractArticleDetails = (article, isSmall) => {
     body: fullBody,
     image: fullImage,
     createdAt,
-    slug
+    slug,
+    desc
   } = article;
   let bodyObject = {};
   try {
@@ -52,16 +53,14 @@ export const extractArticleDetails = (article, isSmall) => {
     )}`;
   }
 
-  let maxCharacters = 350;
-  if (isSmall) maxCharacters = 80;
-  let truncBody =
-    body.length >= maxCharacters ? `${body.slice(0, maxCharacters)}...` : body;
-
-  truncBody = HTMLParser(truncBody);
+  var temp = document.createElement('div');
+  temp.innerHTML = body;
+  let plainBody = temp.textContent || temp.innerText || '';
+  plainBody = plainBody.replace(/&nbsp;/g, '');
 
   return {
     title,
-    body: truncBody,
+    body: desc || plainBody,
     fullName: `${firstname || ''} ${lastname || ''}`,
     username,
     time: formatDate(createdAt).short,
@@ -132,7 +131,9 @@ function Article(props) {
               {title}
             </h2>
           </Link>
-          <p className='text-gray-600 h-10 overflow-hidden'>{body}</p>
+          <p className='text-gray-600 w-full bg-auto md:w-64 h-10 '>
+            <Ellipsis lines={2}>{body}</Ellipsis>
+          </p>
           <Link
             to={`/profile/${username}`}
             className='mr-3 hover:text-blue-700'
