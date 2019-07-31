@@ -1,51 +1,24 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
+import icons from '@fortawesome/fontawesome-free-solid';
 import FontAwesome from '../utilities/FontAwesome';
 
+const faStarSolid = icons.faStar;
+
 export default function DisplayStar({ averageRating }) {
-  const starRating = Math.floor(parseInt(averageRating, 10));
-  if (starRating === 4) {
-    return (
-      <Fragment>
-        <FontAwesome />
-        <FontAwesome />
-        <FontAwesome />
-        <FontAwesome />
-      </Fragment>
-    );
+  const createStars = (averageRating) => {
+    let blackStar = Math.round(Number(averageRating, 10)) || 0;
+    const stars = [];
+    for(let i = 0; i < 5; i++) {
+      stars.push(<FontAwesome key={i} type={(blackStar < 1) ? undefined : faStarSolid} />);
+      blackStar--;
+    }
+    return stars;
   }
-  if (starRating === 3) {
-    return (
-      <Fragment>
-        <FontAwesome />
-        <FontAwesome />
-        <FontAwesome />
-      </Fragment>
-    );
-  }
-  if (starRating === 2) {
-    return (
-      <Fragment>
-        <FontAwesome />
-        <FontAwesome />
-      </Fragment>
-    );
-  }
-  if (starRating === 1) {
-    return (
-      <FontAwesome />
-    );
-  }
-  if (starRating === 0) {
-    return <div />;
-  }
+
   return (
     <Fragment>
-      <FontAwesome />
-      <FontAwesome />
-      <FontAwesome />
-      <FontAwesome />
-      <FontAwesome />
+      {createStars(averageRating)}
     </Fragment>
   );
 }
