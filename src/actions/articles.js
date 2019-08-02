@@ -112,14 +112,11 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
-<<<<<<< HEAD
-=======
 export const setArticleCategories = group => ({
   type: SET_GROUP_ARTICLES,
   payload: group
 });
 
->>>>>>> master
 export const fetchRatings = articleSlug => async dispatch => {
   try {
     const response = await axios.get(`/articles/${articleSlug}`);
