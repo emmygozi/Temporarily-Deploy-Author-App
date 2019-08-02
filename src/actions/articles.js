@@ -115,13 +115,11 @@ export const fetchRatings = articleSlug => async dispatch => {
 export const updateRatings = (rate, articleSlug) => async dispatch => {
   try {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
-    dispatch(
-      updateRating(Number(response.data.payload.article.averageRating), 10)
-    );
+    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
-};
+}
 
 export const createNewArticle = (data, history) => async dispatch => {
   try {
@@ -209,10 +207,8 @@ export const getSingleArticle = id => async dispatch => {
     dispatch(clearSingleArticle());
     const response = await axios.get(`/articles/${id}`);
     dispatch(fetchArticleSuccess(response.data.payload));
-
-    dispatch(
-      updateRating(Number(response.data.payload.article.averageRating), 10)
-    );
+    
+    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
@@ -260,7 +256,7 @@ export const fetchMoreArticles = nextPage => async dispatch => {
 };
 
 // Like an article
-export const likeArticle = slug => async dispatch => {
+export const likeArticle = (slug) => async (dispatch) => {
   try {
     const res = await axios.post(`/articles/${slug}/like`);
     dispatch({
@@ -276,7 +272,7 @@ export const likeArticle = slug => async dispatch => {
 };
 
 // Unlike an article
-export const unlikeArticle = slug => async dispatch => {
+export const unlikeArticle = (slug) => async (dispatch) => {
   try {
     const res = await axios.delete(`/articles/${slug}/like`);
     dispatch({

@@ -120,19 +120,16 @@ export default (state = initialState, action) => {
         ...state,
         article: action.payload
       };
-
     case ARTICLE_UNLIKE_SUCCESS:
       return {
         ...state,
         article: action.payload
       };
-
     case ARTICLE_LIKE_ERROR:
       return {
         ...state,
         errors: action.payload
       };
-
     case ARTICLE_UNLIKE_ERROR:
       return {
         ...state,
