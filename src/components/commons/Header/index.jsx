@@ -90,7 +90,7 @@ export class Header extends Component {
         <div className='flex items-center'>
           <FontAwesome
             type={faSearch}
-            styleClass='m-2 text-gray-500 mr-4 cursor-pointer text-2xl'
+            styleClass='m-2 text-gray-500 mr-4 search-cursor text-2xl'
             role='presentation'
             onKeyDown={this.showSearchBar}
             onClick={this.showSearchBar}

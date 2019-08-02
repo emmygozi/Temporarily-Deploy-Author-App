@@ -334,7 +334,7 @@ class Home extends Component {
                 </div>
               )}
               <div className='md:pl-8 flex flex-col justify-between lg:pb-24 lg:mb-8'>
-                <h1 className='text-gray-600 mb-4 text-sm font-semibold uppercase lg:-mt-10 lg:pt-1 mt-2 md:-mt-10'>
+                <h1 className='text-gray-600 mb-4 text-sm font-semibold uppercase lg:-mt-10 lg:pt-1 mt-2 md:10'>
                   Most Recent
                 </h1>
                 {mostRecent.map(article =>

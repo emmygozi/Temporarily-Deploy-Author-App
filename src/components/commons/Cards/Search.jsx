@@ -14,7 +14,10 @@ export function Search({
 }) {
   return (
     <Link to={`/article/${slug}`}>
-      <div className={`searchItem flex ${searchClass}`} role='presentation'>
+      <div
+        className={`searchItem flex justify-between ${searchClass}`}
+        role='presentation'
+      >
         <div>
           <p className='text-sm md:text-lg lg:text-xl font-bold mb-2'>
             {title}
