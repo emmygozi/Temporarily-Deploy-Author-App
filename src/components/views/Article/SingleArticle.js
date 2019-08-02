@@ -15,7 +15,7 @@ import { faThumbsUp } from '@fortawesome/fontawesome-free-solid'
 import Preloader from '@components/commons/Preloader';
 import { likeArticle, unlikeArticle } from '@actions/articles';
 import CommentsContainer from '../../../containers/CommentsContainer';
-// import convertToJSON from '../../../helpers/convertToJSON';
+import convertToJSON from '../../../helpers/convertToJSON';
 import 'react-rater/lib/react-rater.css'
 import './index.scss';
 
@@ -110,8 +110,8 @@ class SingleArticle extends PureComponent {
       return;
     }
 
-    // return convertToJSON(JSON.parse(raw));
-    return raw
+    return convertToJSON(JSON.parse(raw));
+    // return raw
   };
 
   rateArticle = rated => {
@@ -140,7 +140,7 @@ class SingleArticle extends PureComponent {
   findLike = (likes) => {
     let { user } = this.props;
 
-    if (likes.filter(like => like.userId === user.id).length > 0) {
+    if (likes && likes.filter(like => like.userId === user.id).length > 0) {
       return true
     } else {
       return false
@@ -151,7 +151,7 @@ class SingleArticle extends PureComponent {
     const { article, tags, isAuthenticated, rating } = this.props;
     const { ArticleLikes: likes } = article;
     const userLike = this.findLike(likes);
-   
+  
     const { rate } = this.state;
     
     if (!article.author) {
