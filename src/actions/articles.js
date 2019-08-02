@@ -22,6 +22,11 @@ import {
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
   UPDATE_ARTICLE_RATING,
+  SET_GROUP_ARTICLES,
+  ARTICLE_LIKE_SUCCESS,
+  ARTICLE_LIKE_ERROR,
+  ARTICLE_UNLIKE_SUCCESS,
+  ARTICLE_UNLIKE_ERROR
 } from './types';
 
 export const isLoading = () => ({
@@ -107,6 +112,14 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
+<<<<<<< HEAD
+=======
+export const setArticleCategories = group => ({
+  type: SET_GROUP_ARTICLES,
+  payload: group
+});
+
+>>>>>>> master
 export const fetchRatings = articleSlug => async dispatch => {
   try {
     const response = await axios.get(`/articles/${articleSlug}`);
@@ -155,12 +168,43 @@ export const editArticle = (id, data, history) => async dispatch => {
 export const fetchArticles = () => async dispatch => {
   try {
     dispatch(isLoading());
-    const response = await axios.get('/articles');
-    dispatch(fetchArticlesSuccess(response.data.payload.rows));
+    const response = await axios.get('/articles?page=1&limit=50');
+    const articles = response.data.payload.rows;
+
+    const categories = await dispatch(
+      fetchArticleTags(['family', 'andela', 'people'], articles)
+    );
+
+    dispatch(fetchArticlesSuccess(articles));
     dispatch(setNextPage(response.data.payload.metadata));
+    dispatch(setArticleCategories(categories));
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
   }
+};
+
+export const fetchArticleTags = (tagNames, articles) => async dispatch => {
+  let groups = {};
+  try {
+    const response = await axios.get('/tags');
+    tagNames.map(tagName => {
+      const fullFilterDetails = [];
+      response.data.payload
+        .filter(item =>
+          item.tags.find(tag => tag.toLowerCase() === tagName.toLowerCase())
+        )
+        .map(tag => {
+          articles.map(article => {
+            article.slug === tag.slug && fullFilterDetails.push(article);
+          });
+        });
+
+      groups[tagName] = fullFilterDetails;
+    });
+  } catch (error) {
+    dispatch(getTagsFailure(error.response.data.errors.global));
+  }
+  return groups;
 };
 
 export const getAllTags = slug => async dispatch => {
@@ -237,5 +281,37 @@ export const fetchMoreArticles = nextPage => async dispatch => {
     dispatch(setNextPage(response.data.payload.metadata));
   } catch (error) {
     dispatch(fetchMoreArticlesFailure(error.response.data.errors.global));
+  }
+};
+
+// Like an article
+export const likeArticle = (slug) => async (dispatch) => {
+  try {
+    const res = await axios.post(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_LIKE_SUCCESS,
+      payload: res.data.payload
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_LIKE_ERROR,
+      payload: err.response.data.errors.global
+    });
+  }
+};
+
+// Unlike an article
+export const unlikeArticle = (slug) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_UNLIKE_SUCCESS,
+      payload: res.data.payload
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_UNLIKE_ERROR,
+      payload: err.response.data.errors.global
+    });
   }
 };
