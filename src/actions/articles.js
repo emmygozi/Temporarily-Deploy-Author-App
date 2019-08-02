@@ -11,14 +11,18 @@ import {
   GET_ARTICLE_FAILURE,
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
+  USER_ARTICLE_SUCCESS,
+  USER_ARTICLE_FAILURE,
+  DELETE_ARTICLE_SUCCESS,
+  DELETE_ARTICLE_FAILURE,
   GET_TAGS_FAILURE,
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
-  SET_GROUP_ARTICLES,
   UPDATE_ARTICLE_RATING,
+  SET_GROUP_ARTICLES,
   ARTICLE_LIKE_SUCCESS,
   ARTICLE_LIKE_ERROR,
   ARTICLE_UNLIKE_SUCCESS,
@@ -78,13 +82,23 @@ export const editArticleFailure = error => ({
   payload: error
 });
 
-export const deleteArticleSuccess = article => ({
-  type: ADD_ARTICLE_SUCCESS,
+export const deleteArticleSuccess = (article) => ({
+  type: DELETE_ARTICLE_SUCCESS,
   payload: article
 });
 
 export const deleteArticleFailure = error => ({
-  type: ADD_ARTICLE_FAILURE,
+  type: DELETE_ARTICLE_FAILURE,
+  payload: error
+});
+
+export const fetchUserArticleSuccess = articles => ({
+  type: USER_ARTICLE_SUCCESS,
+  payload: articles
+});
+
+export const fetchUserArticleFailure = error => ({
+  type: USER_ARTICLE_FAILURE,
   payload: error
 });
 
@@ -98,11 +112,14 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
+<<<<<<< HEAD
+=======
 export const setArticleCategories = group => ({
   type: SET_GROUP_ARTICLES,
   payload: group
 });
 
+>>>>>>> master
 export const fetchRatings = articleSlug => async dispatch => {
   try {
     const response = await axios.get(`/articles/${articleSlug}`);
@@ -214,15 +231,27 @@ export const getSingleArticle = id => async dispatch => {
   }
 };
 
-export const deleteArticle = id => async dispatch => {
+export const getUserArticle = id => async (dispatch) => {
+  try {
+    const response = await axios('/articles?page=1&limit=50');
+    const result = response.data.payload.rows.filter(article => article.author.id === id);
+
+    dispatch(fetchUserArticleSuccess(result));
+  } catch (error) {
+    dispatch(fetchUserArticleFailure(error.response.data.errors.global));
+  }
+}
+
+export const deleteArticle = article => async dispatch => {
   try {
     dispatch(isLoading);
 
-    const response = await axios.delete(`/articles/${id}`);
+    await axios.delete(`/articles/${article.slug}`);
 
-    dispatch(fetchArticlesSuccess(response.data.data.payload));
+    dispatch(deleteArticleSuccess(article));
+    toast.success('Article Deleted!');
   } catch (error) {
-    dispatch(fetchArticlesFailure(error.response.data.errors.global));
+    dispatch(deleteArticleFailure(error.response.data.errors.global));
   }
 };
 

@@ -1,12 +1,125 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster&display=swap');
+$base-color: #335bcf;
+
+.font-lobster {
+  font-family: 'Lobster', cursive;
+}
+
+.profile-article-desc {
+  font-family: Georgia, 'Times New Roman', Times, serif !important;
+}
+
+.rmc-tabs-tab-bar-tab-active {
+  color: $base-color;
+}
+
+.rmc-tabs-tab-bar-underline {
+  border: 1px $base-color solid;
+}
+
+.rmc-tabs-tab-bar-tab {
+  font-size: 1em;
+  cursor: pointer;
+}
+
 .full-height{
   min-height: 90vh;
 }
 
 .profile-container{
-  width: 85%;
+  width: 50%;
   max-width: 1000px;
   margin: 0 auto
 }
+
+@media only screen and (max-width: 600px) {
+  .profile-container {
+    width: 90%;
+  }
+
+  .profile-form {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 768px) and (min-width: 600px) {
+  .profile-container {
+    width: 90%;
+  }
+
+  .profile-form {
+    width: 75%;
+  }
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 768px) {
+  .profile-container {
+    width: 80%;
+  }
+
+  .profile-form {
+    width: 60%;
+  }
+}
+
+.more:hover > ul {
+  display: block !important;
+}
+
+.more ul {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 25px;
+  border-radius: 3px;
+  min-width: 100px;
+  text-align: center;
+  border: 1px solid #ddd;
+  background-color: var(--white);
+  box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.05);
+  right: 0;
+  z-index: 300;
+}
+
+.more ul:after,
+.more ul:before {
+  content:"";
+	height:0;
+	width:0;
+	position:absolute;
+	bottom:100%;
+	border:solid transparent;
+}
+
+.more ul:after {
+  border-bottom-color: #fff;
+	border-width: 6px;
+	left: 85%;
+	margin-left: -6px;
+}
+
+.more ul:before {
+  border-bottom-color:#e2e8f0;
+	border-width: 7px;
+	left: 85%;
+	margin-left: -7px;
+}
+
+.more ul li {
+  list-style: none;
+  padding: 5px 10px;
+}
+
+.ReactModal__Overlay--after-open {
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.ReactModal__Content {
+  border: none !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
 .active {
   color: black;
   padding-bottom: 10px;
@@ -56,4 +169,42 @@
 }
 .buttons {
   max-width: 550px;
+}
+
+.upload-btn {
+  position: absolute !important;
+  right: -5px !important;
+  bottom: 5px !important;
+  top: 80%;
+  left: 75%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  background: #000;
+  border-radius: 100%;
+  transition: all .2s ease-in-out;
+}
+
+.upload-btn:hover {
+  background: #335bcf;
+  color: #fff;
+}
+
+.profile-form {
+  width: 100%;
+  margin: 0;
+}
+
+.justify-center {
+  justify-content: center !important;
+}
+
+.no-effect label {
+  margin: 0 !important;
+  position: relative !important;
+}
+
+.profile-extra {
+  width: 70%;
+  margin: 0 auto;
 }

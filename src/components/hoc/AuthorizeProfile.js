@@ -4,18 +4,19 @@ import { Redirect } from 'react-router-dom';
 import Preloader from '../commons/Preloader';
 
 /**
- * @function AuthorizeArticle
+ * @function AuthorizeProfile
  * @param {object} props
  * @return {JSX} - MyComponent|Preloader|Redirect
  */
-const AuthorizeArticle = (props) => {
+const AuthorizeProfile = (props) => {
   const {
       MyComponent,
       loading,
-      article,
+      profile,
       user,
       location
   } = props;
+  const { match: { params: { username } } } = props;
 
   return (
     <Fragment>
@@ -31,31 +32,28 @@ const AuthorizeArticle = (props) => {
         </div>
       )
     }
-      {!loading && article.author.id === user.id && <MyComponent {...props} />}
-      {!loading && article.author.id !== user.id && (
+      {!loading && profile.userId === user.id && <MyComponent {...props} />}
+      {!loading && profile.userId !== user.id && (
         <Redirect
-          to={{ pathname: `/article/${article.slug}`, state: { from: location } }}
+          to={{ pathname: `/profile/${username}`, state: { from: location } }}
         />
       )}
     </Fragment>
   );
 };
 
-AuthorizeArticle.propTypes = {
+AuthorizeProfile.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      articleId: PropTypes.string.isRequired
+      username: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
   location: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.object
   ]).isRequired,
-  article: PropTypes.shape({
-    slug: PropTypes.string.isRequired,
-    author: PropTypes.shape({
-      id: PropTypes.string.isRequired
-    }).isRequired
+  profile: PropTypes.shape({
+    userId: PropTypes.string.isRequired
   }).isRequired,
   user: PropTypes.shape({
     id: PropTypes.string.isRequired
@@ -67,8 +65,8 @@ AuthorizeArticle.propTypes = {
   ]).isRequired
 };
 
-AuthorizeArticle.defaultProps = {
+AuthorizeProfile.defaultProps = {
   loading: true
 }
 
-export default AuthorizeArticle;
+export default AuthorizeProfile;

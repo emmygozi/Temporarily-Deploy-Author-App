@@ -10,12 +10,13 @@ import {
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
   GET_TAGS_FAILURE,
+  USER_ARTICLE_SUCCESS,
+  USER_ARTICLE_FAILURE,
   CLEAR_SINGLE_ARTICLE,
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
-  SET_GROUP_ARTICLES,
   UPDATE_ARTICLE_RATING,
   ARTICLE_LIKE_SUCCESS,
   ARTICLE_LIKE_ERROR,
@@ -28,6 +29,7 @@ const initialState = {
   errors: {},
   tags: [],
   articles: [],
+  userArticles: [],
   article: {},
   ratings: 0,
   loadingMore: false,
@@ -63,6 +65,12 @@ export default (state = initialState, action) => {
         article: action.payload,
         errors: {}
       };
+    case USER_ARTICLE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userArticles: action.payload
+      }
     case CLEAR_SINGLE_ARTICLE:
       return {
         ...state,
@@ -72,6 +80,7 @@ export default (state = initialState, action) => {
     case GET_ARTICLES_FAILURE:
     case GET_ARTICLE_FAILURE:
     case EDIT_ARTICLE_FAILURE:
+    case USER_ARTICLE_FAILURE:
     case GET_TAGS_FAILURE:
       return {
         ...state,

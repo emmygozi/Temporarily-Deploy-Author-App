@@ -40,10 +40,15 @@ class NewArticle extends Component {
       draft: false,
       title: '',
       tags: [],
+      desc: '',
       suggestions: [
         {
           id: 'Family',
           text: 'Family'
+        },
+        {
+          id: 'Andela',
+          text: 'Andela'
         }
       ]
     };
@@ -99,7 +104,7 @@ class NewArticle extends Component {
 
   publishArticle = () => {
     const { createNewArticle, history, errors } = this.props;
-    const { title, tags } = this.state;
+    const { title, tags, desc } = this.state;
 
     let articleTags = [];
     tags.map(tag => {
@@ -111,6 +116,7 @@ class NewArticle extends Component {
         this.editor.save().then((outputData) => {
           const values = {
             title,
+            desc: desc === '' ? '<kingsmen>Summary</kingsmen>' : desc,
             body: JSON.stringify(outputData),
             tags: articleTags
           };
@@ -135,7 +141,7 @@ class NewArticle extends Component {
     if (!this.editor) {
       this.editor = Editor();
     }
-    const { draft, tags, suggestions, title } = this.state;
+    const { draft, tags, suggestions, title, desc } = this.state;
     if (title.length > 4) {
       ready = true;
     }
@@ -188,6 +194,9 @@ class NewArticle extends Component {
                         activeSuggestion: 'activeSuggestionClass'
                       }}
                     />
+                    <div className="w-3/5 lg:w-1/2 md:w-2/5 mx-auto mt-4">
+                      <textarea value={desc} name="desc" rows={3} className="resize-none rounded border border-gray-500 text-base w-full p-2" placeholder="Summary" onChange={this.onChange}  />
+                    </div>
                     <Button type="solid" color="blue" onClick={this.publishArticle} id="publish-article">Publish Now</Button>
                   </div>
                 </div>

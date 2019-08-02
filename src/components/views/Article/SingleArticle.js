@@ -90,6 +90,7 @@ class SingleArticle extends PureComponent {
       getSingleArticle,
       getAllTags
     } = this.props;
+    
     const {
       match: {
         params: { articleId: newArticleId }
@@ -158,7 +159,7 @@ class SingleArticle extends PureComponent {
       return (
         <Preloader
           type='page'
-          styles='Triangle'
+          styles='ThreeDots'
           width={80}
           height={80}
           color='blue'
@@ -234,6 +235,7 @@ class SingleArticle extends PureComponent {
             <Tags tags={tags} />
             <Rater total={5} rating={rate} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
+
 
           <div className='comments my-4'>
             <h2 className='text-lg font-semibold comment-res'>Responses</h2>

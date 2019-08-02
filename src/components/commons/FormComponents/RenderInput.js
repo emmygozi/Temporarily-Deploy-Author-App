@@ -47,7 +47,7 @@ class RenderInput extends Component {
   render() {
     const {
       id, type, name, className,
-      value, error, label, handleChange
+      value, error, label, handleChange, ...rest
     } = this.props;
     const { changed } = this.state;
 
@@ -66,6 +66,7 @@ class RenderInput extends Component {
             onFocus={this.onFocus}
             onBlur={this.onFocusOut}
             error={error}
+            {...rest}
           />
           {error && <div className="text-red-600 text-xs text-left mt-1">{error}</div>}
         </div>
