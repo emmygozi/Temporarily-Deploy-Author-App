@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -5,14 +6,18 @@ import Rater from 'react-rater';
 import Tags from '@components/commons/Cards/Tags';
 import ReactHtmlParser from 'react-html-parser';
 import Helmet from 'react-helmet';
+import classnames from 'classnames';
 import { calculateRT } from "@components/commons/Cards/Article";
 import PageLayout from '@components/layout/PageLayout';
 import ArticleRating from '@components/commons/Cards/displayStar';
+import FontAwesome from '@components/commons/utilities/FontAwesome';
+import { faThumbsUp } from '@fortawesome/fontawesome-free-solid'
 import Preloader from '@components/commons/Preloader';
 import CommentsContainer from '../../../containers/CommentsContainer';
 import convertToJSON from '../../../helpers/convertToJSON';
 import 'react-rater/lib/react-rater.css'
 import './index.scss';
+
 
 class SingleArticle extends PureComponent {
   static propTypes = {
@@ -20,6 +25,10 @@ class SingleArticle extends PureComponent {
       params: PropTypes.shape({
         articleId: PropTypes.string.isRequired
       }).isRequired
+    }).isRequired,
+    user: PropTypes.shape({
+      username: PropTypes.string,
+      id: PropTypes.string
     }).isRequired,
     tags: PropTypes.arrayOf(PropTypes.string).isRequired,
     article: PropTypes.shape({
@@ -36,6 +45,8 @@ class SingleArticle extends PureComponent {
         }).isRequired
       })
     }).isRequired,
+    likeArticle: PropTypes.func.isRequired,
+    unlikeArticle: PropTypes.func.isRequired,
     getSingleArticle: PropTypes.func.isRequired,
     getAllTags: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
@@ -51,12 +62,12 @@ class SingleArticle extends PureComponent {
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
 
-      const { article, fetchRatings, fetchUserRating, username } = props;
+      const { article, fetchRatings, fetchUserRating, username } = this.props;
       fetchRatings(article.slug);
       fetchUserRating(article.slug, username);
       
       this.state = {
-        rate: 0
+        rate: undefined
       }
     }
 
@@ -99,23 +110,52 @@ class SingleArticle extends PureComponent {
     if (!raw) {
       return;
     }
+
     return convertToJSON(JSON.parse(raw));
+    // return raw
   };
 
   rateArticle = rated => {
-    const { article, updateRatings, username } = this.props;
+    const { article, updateRatings } = this.props;
     const rate = {
       rate: rated.rating
     }
     this.setState({
       rate: rated.rating
     })
-    updateRatings(rate, article.slug, username);
+    console.log(article.slug);
+    
+    updateRatings(rate, article.slug);
+  }
+
+  handleLikes = (slug, likes) => {
+    const { likeArticle, unlikeArticle, user } = this.props;
+
+    const userId = user.id;
+
+    if (likes.filter(like => like.userId === userId).length > 0) {
+      unlikeArticle(slug);
+    } else {
+      likeArticle(slug);
+    }
+  }
+
+  findLike = (likes) => {
+    let { user } = this.props;
+
+    if (likes && likes.filter(like => like.userId === user.id).length > 0) {
+      return true
+    } else {
+      return false
+    }
   }
 
   render() {
     const { article, tags, isAuthenticated, rating, userRating } = this.props;
     const {rate} = this.state;
+
+    const { ArticleLikes: likes } = article;
+    const userLike = this.findLike(likes);
     
     if (!article.author) {
       return (
@@ -157,6 +197,7 @@ class SingleArticle extends PureComponent {
                 {fullname === ' '
                   ? this.formatString(article.author.username)
                   : fullname}
+
               </h4>
               <div className='flex items-center text-sm text-gray-600'>
                 <p className='text-xs'>
@@ -164,10 +205,29 @@ class SingleArticle extends PureComponent {
                 </p>
                 <span className='mx-3 text-black my-auto'>.</span>
                 <p className='text-xs'>{`${calculateRT(article.body, 300)} read`}</p>
+                <span className='mx-3 text-black my-auto'>.</span>
+                <span className>
+                  <FontAwesome
+                    type={faThumbsUp}
+                    onClick={() => this.handleLikes(article.slug, likes)}
+                    styleClass={
+                      classnames('cursor-pointer', {
+                        'clapped': userLike,
+                        'faThumbsUp': !userLike
+                      })
+                    }
+                  />
+                  <span className='ml-1'>
+                    {likes.length}
+                  </span>
+                </span>
               </div>
-              <ArticleRating
-                averageRating={rating ? rating : 0} 
-              />
+
+              <span className='mt-12'>
+                <ArticleRating
+                  averageRating={rating ? rating : 0}
+                />
+              </span>
             </div>
           </div>
 
@@ -177,7 +237,6 @@ class SingleArticle extends PureComponent {
             <Tags tags={tags} />
             <Rater total={5} rating={rate ? rate : userRating} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
-
 
           <div className='comments my-4'>
             <h2 className='text-lg font-semibold comment-res'>Responses</h2>

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {
@@ -17,8 +18,13 @@ import {
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
+  SET_GROUP_ARTICLES,
   UPDATE_ARTICLE_RATING,
-  UPDATE_USER_RATING
+  UPDATE_USER_RATING,
+  ARTICLE_LIKE_SUCCESS,
+  ARTICLE_LIKE_ERROR,
+  ARTICLE_UNLIKE_SUCCESS,
+  ARTICLE_UNLIKE_ERROR
 } from './types';
 
 export const isLoading = () => ({
@@ -101,29 +107,36 @@ export const getTagsFailure = errors => ({
 
 export const fetchUserRating = ( articleSlug, username ) => async dispatch => {
   try {
+    console.log(articleSlug);
+    
     const response = await axios.get(`/articles/${articleSlug}/rate`);
     const rateObject = response.data.payload.ratings.filter(rate => rate.rater.username === username);
+    console.log(response);
     
     dispatch(updateUserRating(Number(rateObject[0].ratings), 10));
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
 };
+export const setArticleCategories = group => ({
+  type: SET_GROUP_ARTICLES,
+  payload: group
+});
 
 export const fetchRatings = articleSlug => async dispatch => {
   try {
-    const response = await axios.get(`/articles/${articleSlug}`);    
+    const response = await axios.get(`/articles/${articleSlug}`);
+    
     dispatch(updateRating(Number(response.data.payload.averageRating), 10));
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
 };
 
-export const updateRatings = (rate, articleSlug, username) => async dispatch => {
+export const updateRatings = (rate, articleSlug) => async dispatch => {
   try {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
     dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
-    fetchUserRating(articleSlug, username);
 
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
@@ -160,12 +173,43 @@ export const editArticle = (id, data, history) => async dispatch => {
 export const fetchArticles = () => async dispatch => {
   try {
     dispatch(isLoading());
-    const response = await axios.get('/articles');
-    dispatch(fetchArticlesSuccess(response.data.payload.rows));
+    const response = await axios.get('/articles?page=1&limit=50');
+    const articles = response.data.payload.rows;
+
+    const categories = await dispatch(
+      fetchArticleTags(['family', 'andela', 'people'], articles)
+    );
+
+    dispatch(fetchArticlesSuccess(articles));
     dispatch(setNextPage(response.data.payload.metadata));
+    dispatch(setArticleCategories(categories));
   } catch (error) {
     dispatch(fetchArticlesFailure(error.response.data.errors.global));
   }
+};
+
+export const fetchArticleTags = (tagNames, articles) => async dispatch => {
+  let groups = {};
+  try {
+    const response = await axios.get('/tags');
+    tagNames.map(tagName => {
+      const fullFilterDetails = [];
+      response.data.payload
+        .filter(item =>
+          item.tags.find(tag => tag.toLowerCase() === tagName.toLowerCase())
+        )
+        .map(tag => {
+          articles.map(article => {
+            article.slug === tag.slug && fullFilterDetails.push(article);
+          });
+        });
+
+      groups[tagName] = fullFilterDetails;
+    });
+  } catch (error) {
+    dispatch(getTagsFailure(error.response.data.errors.global));
+  }
+  return groups;
 };
 
 export const getAllTags = slug => async dispatch => {
@@ -230,5 +274,37 @@ export const fetchMoreArticles = nextPage => async dispatch => {
     dispatch(setNextPage(response.data.payload.metadata));
   } catch (error) {
     dispatch(fetchMoreArticlesFailure(error.response.data.errors.global));
+  }
+};
+
+// Like an article
+export const likeArticle = (slug) => async (dispatch) => {
+  try {
+    const res = await axios.post(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_LIKE_SUCCESS,
+      payload: res.data.payload
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_LIKE_ERROR,
+      payload: err.response.data.errors.global
+    });
+  }
+};
+
+// Unlike an article
+export const unlikeArticle = (slug) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_UNLIKE_SUCCESS,
+      payload: res.data.payload
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_UNLIKE_ERROR,
+      payload: err.response.data.errors.global
+    });
   }
 };
