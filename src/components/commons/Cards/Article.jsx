@@ -27,9 +27,11 @@ export const extractArticleDetails = article => {
     body: fullBody,
     image: fullImage,
     createdAt,
-    slug,
-    desc
+    slug
   } = article;
+
+  let { desc } = article;
+
   let bodyObject = {};
   try {
     bodyObject = JSON.parse(fullBody);
@@ -58,9 +60,11 @@ export const extractArticleDetails = article => {
   let plainBody = temp.textContent || temp.innerText || '';
   plainBody = plainBody.replace(/&nbsp;/g, '');
 
+  desc = desc || '<kingsmen>Summary</kingsmen>';
+
   return {
     title,
-    body: desc || plainBody,
+    body: desc === '<kingsmen>Summary</kingsmen>' ? plainBody : desc,
     fullName: `${firstname || ''} ${lastname || ''}`,
     username,
     time: formatDate(createdAt).short,

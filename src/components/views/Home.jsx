@@ -334,7 +334,7 @@ class Home extends Component {
                 </div>
               )}
               <div className='md:pl-8 flex flex-col justify-between lg:pb-24 lg:mb-8'>
-                <h1 className='text-gray-600 mb-4 text-sm font-semibold uppercase lg:-mt-10 lg:pt-1 '>
+                <h1 className='text-gray-600 mb-4 text-sm font-semibold uppercase lg:-mt-10 lg:pt-1 mt-2 md:-mt-10'>
                   Most Recent
                 </h1>
                 {mostRecent.map(article =>
@@ -344,24 +344,32 @@ class Home extends Component {
             </div>
             <div className='w-full border bg-black mb-2 mt-2 hidden md:block' />
 
-            <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
-              Family
-            </h1>
+            {familyTags.length > 0 && (
+              <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
+                Family
+              </h1>
+            )}
             <section className='card'>{familyTags}</section>
 
-            <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
-              Andela
-            </h1>
+            {andelaTags.length > 0 && (
+              <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
+                Andela
+              </h1>
+            )}
             <section className='card'>{andelaTags}</section>
 
-            <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
-              People
-            </h1>
+            {peopleTags.length > 0 && (
+              <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
+                People
+              </h1>
+            )}
             <section className='card'>{peopleTags}</section>
 
-            <h1 className='text-gray-600 mt-4 text-sm font-semibold uppercase'>
-              More
-            </h1>
+            {others.length > 0 && (
+              <h1 className='text-gray-600 mt-4 text-sm font-semibold uppercase'>
+                More
+              </h1>
+            )}
             <div className='flex flex-wrap'>
               {others.map(article => this.displaySmallArticle(article))}
             </div>
