@@ -52,6 +52,8 @@ class SingleArticle extends PureComponent {
     getAllTags: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     rating: PropTypes.number.isRequired,
+    updateRatings: PropTypes.func.isRequired,
+    fetchRatings: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -59,8 +61,14 @@ class SingleArticle extends PureComponent {
 
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
+      this.state = {
+        rate: 0
+      }
 
-  }
+      const { article, fetchRatings } = props;
+      fetchRatings(article.slug);
+      
+    }
 
   componentDidMount() {
     const {
@@ -71,6 +79,7 @@ class SingleArticle extends PureComponent {
     const { getSingleArticle, getAllTags } = this.props;
     getSingleArticle(articleId);
     getAllTags(articleId);
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -107,6 +116,9 @@ class SingleArticle extends PureComponent {
 
   rateArticle = rated => {
     const { article, updateRatings } = this.props;
+    this.setState({
+      rate: rated.rating
+    })
     const rate = {
       rate: rated.rating
     }
@@ -125,7 +137,7 @@ class SingleArticle extends PureComponent {
     }
   }
 
-  findLike(likes) {
+  findLike = (likes) => {
     let { user } = this.props;
 
     if (likes.filter(like => like.userId === user.id).length > 0) {
@@ -137,8 +149,11 @@ class SingleArticle extends PureComponent {
 
   render() {
     const { article, tags, isAuthenticated, rating } = this.props;
-    const { ArticleLikes: likes } = article
-
+    const { ArticleLikes: likes } = article;
+    const userLike = this.findLike(likes);
+   
+    const { rate } = this.state;
+    
     if (!article.author) {
       return (
         <Preloader
@@ -194,8 +209,8 @@ class SingleArticle extends PureComponent {
                     onClick={() => this.handleLikes(article.slug, likes)}
                     styleClass={
                       classnames('cursor-pointer', {
-                        'clapped': this.findLike(likes),
-                        'faThumbsUp': !this.findLike(likes)
+                        'clapped': userLike,
+                        'faThumbsUp': !userLike
                       })
                     }
                   />
@@ -217,7 +232,7 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={rating ? rating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <Rater total={5} rating={rate} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
 
           <div className='comments my-4'>

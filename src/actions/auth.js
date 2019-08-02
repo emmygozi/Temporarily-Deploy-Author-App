@@ -16,8 +16,7 @@ import {
 import { fetchArticles } from './articles';
 
 axios.defaults.baseURL =
-  // 'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
-  'http://localhost:3000/api/v1';
+ 'https://kingsmen-ah-backend-staging.herokuapp.com/api/v1';
 
 export const setAuthToken = token => {
   if (token) {
@@ -26,6 +25,7 @@ export const setAuthToken = token => {
     delete axios.defaults.headers.common['Authorization'];
   }
 };
+
 export const setCurrentUser = user => {
   return {
     type: SET_CURRENT_USER,
