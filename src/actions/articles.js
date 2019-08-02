@@ -18,6 +18,7 @@ import {
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
   UPDATE_ARTICLE_RATING,
+  UPDATE_USER_RATING
 } from './types';
 
 export const isLoading = () => ({
@@ -26,6 +27,11 @@ export const isLoading = () => ({
 
 export const updateRating = rate => ({
   type: UPDATE_ARTICLE_RATING,
+  payload: rate
+});
+
+export const updateUserRating = rate => ({
+  type: UPDATE_USER_RATING,
   payload: rate
 });
 
@@ -93,19 +99,32 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
+export const fetchUserRating = ( articleSlug, username ) => async dispatch => {
+  try {
+    const response = await axios.get(`/articles/${articleSlug}/rate`);
+    const rateObject = response.data.payload.ratings.filter(rate => rate.rater.username === username);
+    
+    dispatch(updateUserRating(Number(rateObject[0].ratings), 10));
+  } catch (err) {
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
+  }
+};
+
 export const fetchRatings = articleSlug => async dispatch => {
   try {
-    const response = await axios.get(`/articles/${articleSlug}`);
+    const response = await axios.get(`/articles/${articleSlug}`);    
     dispatch(updateRating(Number(response.data.payload.averageRating), 10));
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
 };
 
-export const updateRatings = (rate, articleSlug) => async dispatch => {
+export const updateRatings = (rate, articleSlug, username) => async dispatch => {
   try {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
     dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
+    fetchUserRating(articleSlug, username);
+
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }

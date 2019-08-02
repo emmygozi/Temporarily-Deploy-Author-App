@@ -15,7 +15,8 @@ import {
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
-  UPDATE_ARTICLE_RATING
+  UPDATE_ARTICLE_RATING,
+  UPDATE_USER_RATING
 } from '@actions/types';
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
   articles: [],
   article: {},
   ratings: 0,
+  userRating: 0,
   loadingMore: false,
   nextPage: {}
 };
@@ -39,8 +41,14 @@ export default (state = initialState, action) => {
     case UPDATE_ARTICLE_RATING:
       return {
         ...state,
-        ratings: action.payload
+        ratings: action.payload,
       };
+    case UPDATE_USER_RATING:
+      return {
+        ...state,
+        userRating: action.payload,
+      };
+    
     case GET_ARTICLES_SUCCESS:
       return {
         ...state,

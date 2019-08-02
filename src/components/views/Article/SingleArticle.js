@@ -41,7 +41,8 @@ class SingleArticle extends PureComponent {
     isAuthenticated: PropTypes.bool.isRequired,
     rating: PropTypes.number.isRequired,
     updateRatings: PropTypes.func.isRequired,
-    fetchRatings: PropTypes.func.isRequired
+    fetchRatings: PropTypes.func.isRequired,
+    fetchUserRating: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -49,13 +50,14 @@ class SingleArticle extends PureComponent {
 
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
+
+      const { article, fetchRatings, fetchUserRating, username } = props;
+      fetchRatings(article.slug);
+      fetchUserRating(article.slug, username);
+      
       this.state = {
         rate: 0
       }
-
-      const { article, fetchRatings } = props;
-      fetchRatings(article.slug);
-      
     }
 
   componentDidMount() {
@@ -101,19 +103,19 @@ class SingleArticle extends PureComponent {
   };
 
   rateArticle = rated => {
-    const { article, updateRatings } = this.props;
-    this.setState({
-      rate: rated.rating
-    })
+    const { article, updateRatings, username } = this.props;
     const rate = {
       rate: rated.rating
     }
-    updateRatings(rate, article.slug);
+    this.setState({
+      rate: rated.rating
+    })
+    updateRatings(rate, article.slug, username);
   }
 
   render() {
-    const { article, tags, isAuthenticated, rating } = this.props;
-    const { rate } = this.state;
+    const { article, tags, isAuthenticated, rating, userRating } = this.props;
+    const {rate} = this.state;
     
     if (!article.author) {
       return (
@@ -173,7 +175,7 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={rate} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <Rater total={5} rating={rate ? rate : userRating} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
           </div>
 
 
