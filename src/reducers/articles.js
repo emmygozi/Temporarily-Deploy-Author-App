@@ -10,11 +10,14 @@ import {
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
   GET_TAGS_FAILURE,
+  USER_ARTICLE_SUCCESS,
+  USER_ARTICLE_FAILURE,
   CLEAR_SINGLE_ARTICLE,
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
-  SET_NEXT_PAGE
+  SET_NEXT_PAGE,
+  UPDATE_ARTICLE_RATING
 } from '@actions/types';
 
 const initialState = {
@@ -22,7 +25,9 @@ const initialState = {
   errors: {},
   tags: [],
   articles: [],
+  userArticles: [],
   article: {},
+  ratings: 0,
   loadingMore: false,
   nextPage: {}
 };
@@ -33,6 +38,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: true
+      };
+    case UPDATE_ARTICLE_RATING:
+      return {
+        ...state,
+        ratings: action.payload
       };
     case GET_ARTICLES_SUCCESS:
       return {
@@ -50,6 +60,12 @@ export default (state = initialState, action) => {
         article: action.payload,
         errors: {}
       };
+    case USER_ARTICLE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userArticles: action.payload
+      }
     case CLEAR_SINGLE_ARTICLE:
       return {
         ...state,
@@ -59,6 +75,7 @@ export default (state = initialState, action) => {
     case GET_ARTICLES_FAILURE:
     case GET_ARTICLE_FAILURE:
     case EDIT_ARTICLE_FAILURE:
+    case USER_ARTICLE_FAILURE:
     case GET_TAGS_FAILURE:
       return {
         ...state,

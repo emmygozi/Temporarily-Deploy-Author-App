@@ -29,6 +29,9 @@
       "@base/*": [
         "./public/*"
       ],
+      "@containers/*": [
+        "./src/containers/*"
+      ],
     }
   },
   "exclude": ["node_modules"]

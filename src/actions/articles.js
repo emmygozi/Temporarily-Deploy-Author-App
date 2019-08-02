@@ -11,16 +11,26 @@ import {
   GET_ARTICLE_FAILURE,
   GET_ARTICLE_SUCCESS,
   GET_TAGS_SUCCESS,
+  USER_ARTICLE_SUCCESS,
+  USER_ARTICLE_FAILURE,
+  DELETE_ARTICLE_SUCCESS,
+  DELETE_ARTICLE_FAILURE,
   GET_TAGS_FAILURE,
   IS_LOADING_MORE,
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
-  CLEAR_SINGLE_ARTICLE
+  CLEAR_SINGLE_ARTICLE,
+  UPDATE_ARTICLE_RATING,
 } from './types';
 
 export const isLoading = () => ({
   type: IS_LOADING
+});
+
+export const updateRating = rate => ({
+  type: UPDATE_ARTICLE_RATING,
+  payload: rate
 });
 
 export const addArticleSuccess = article => ({
@@ -67,13 +77,23 @@ export const editArticleFailure = error => ({
   payload: error
 });
 
-export const deleteArticleSuccess = article => ({
-  type: ADD_ARTICLE_SUCCESS,
+export const deleteArticleSuccess = (article) => ({
+  type: DELETE_ARTICLE_SUCCESS,
   payload: article
 });
 
 export const deleteArticleFailure = error => ({
-  type: ADD_ARTICLE_FAILURE,
+  type: DELETE_ARTICLE_FAILURE,
+  payload: error
+});
+
+export const fetchUserArticleSuccess = articles => ({
+  type: USER_ARTICLE_SUCCESS,
+  payload: articles
+});
+
+export const fetchUserArticleFailure = error => ({
+  type: USER_ARTICLE_FAILURE,
   payload: error
 });
 
@@ -86,6 +106,24 @@ export const getTagsFailure = errors => ({
   type: GET_TAGS_FAILURE,
   payload: errors
 });
+
+export const fetchRatings = articleSlug => async dispatch => {
+  try {
+    const response = await axios.get(`/articles/${articleSlug}`);
+    dispatch(updateRating(Number(response.data.payload.averageRating), 10));
+  } catch (err) {
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
+  }
+};
+
+export const updateRatings = (rate, articleSlug) => async dispatch => {
+  try {
+    const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
+    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
+  } catch (err) {
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
+  }
+}
 
 export const createNewArticle = (data, history) => async dispatch => {
   try {
@@ -140,24 +178,36 @@ export const getSingleArticle = id => async dispatch => {
   try {
     dispatch(isLoading());
     dispatch(clearSingleArticle());
-
     const response = await axios.get(`/articles/${id}`);
-
     dispatch(fetchArticleSuccess(response.data.payload));
+    
+    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
 };
 
-export const deleteArticle = id => async dispatch => {
+export const getUserArticle = id => async (dispatch) => {
+  try {
+    const response = await axios('/articles?page=1&limit=50');
+    const result = response.data.payload.rows.filter(article => article.author.id === id);
+
+    dispatch(fetchUserArticleSuccess(result));
+  } catch (error) {
+    dispatch(fetchUserArticleFailure(error.response.data.errors.global));
+  }
+}
+
+export const deleteArticle = article => async dispatch => {
   try {
     dispatch(isLoading);
 
-    const response = await axios.delete(`/articles/${id}`);
+    await axios.delete(`/articles/${article.slug}`);
 
-    dispatch(fetchArticlesSuccess(response.data.data.payload));
+    dispatch(deleteArticleSuccess(article));
+    toast.success('Article Deleted!');
   } catch (error) {
-    dispatch(fetchArticlesFailure(error.response.data.errors.global));
+    dispatch(deleteArticleFailure(error.response.data.errors.global));
   }
 };
 

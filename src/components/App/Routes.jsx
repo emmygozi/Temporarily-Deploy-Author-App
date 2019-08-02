@@ -11,6 +11,7 @@ import EditArticle from '../containers/views/Article/EditArticle';
 import NewArticle from '../containers/views/Article/NewArticle';
 import Authenticator from '../containers/hoc/Authenticator';
 import AuthorizeArticle from '../containers/hoc/AuthorizeArticle';
+import AuthorizeProfile from '../containers/hoc/AuthorizeProfile';
 
 
 const Routes = () => (
@@ -23,7 +24,7 @@ const Routes = () => (
       <Route exact path="/article/:articleId" component={SingleArticle} />
       <Route exact path="/article/:articleId/edit" component={AuthorizeArticle(Authenticator(EditArticle))} />
       <Route exact path="/profile/:username" component={Profile} />
-      <Route exact path="/profile/:username/edit" component={EditProfile} />
+      <Route exact path="/profile/:username/edit" component={AuthorizeProfile(EditProfile)} />
       
       <Route path="*" component={NotFound} />
     </Switch>
