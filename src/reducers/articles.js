@@ -15,7 +15,12 @@ import {
   GET_MORE_ARTICLES_SUCCESS,
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
-  SET_GROUP_ARTICLES
+  SET_GROUP_ARTICLES,
+  UPDATE_ARTICLE_RATING,
+  ARTICLE_LIKE_SUCCESS,
+  ARTICLE_LIKE_ERROR,
+  ARTICLE_UNLIKE_SUCCESS,
+  ARTICLE_UNLIKE_ERROR
 } from '@actions/types';
 
 const initialState = {
@@ -24,6 +29,7 @@ const initialState = {
   tags: [],
   articles: [],
   article: {},
+  ratings: 0,
   loadingMore: false,
   nextPage: {},
   categories: {}
@@ -35,6 +41,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: true
+      };
+    case UPDATE_ARTICLE_RATING:
+      return {
+        ...state,
+        ratings: action.payload
       };
     case GET_ARTICLES_SUCCESS:
       return {
@@ -102,7 +113,31 @@ export default (state = initialState, action) => {
       return {
         ...state,
         categories: action.payload
-      }
+      };
+
+    case ARTICLE_LIKE_SUCCESS:
+      return {
+        ...state,
+        article: action.payload
+      };
+
+    case ARTICLE_UNLIKE_SUCCESS:
+      return {
+        ...state,
+        article: action.payload
+      };
+
+    case ARTICLE_LIKE_ERROR:
+      return {
+        ...state,
+        errors: action.payload
+      };
+
+    case ARTICLE_UNLIKE_ERROR:
+      return {
+        ...state,
+        errors: action.payload
+      };
     default:
       return state;
   }

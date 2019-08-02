@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Footer from '@components/commons/utilities/Footer';
-import CommentCard from '../commons/Cards/CommentCard';
-import CreateCommentCard from '../commons/Cards/CreateCommentCard';
-import { getComments, postComment, delComment, likeComment, unlikeComment } from '../../actions/comments';
-import formatDate from '../commons/utilities/helpers'
+import { getComments, postComment, delComment, likeComment, unlikeComment } from '@actions/comments';
+import CommentCard from '@components/commons/Cards/CommentCard';
+import CreateCommentCard from '../components/commons/Cards/CreateCommentCard';
+import formatDate from '../components/commons/utilities/helpers'
 
 /**
  *
@@ -23,9 +23,6 @@ export class CommentsContainer extends Component {
       errors: {},
       toggle: false
     }
-  }
-
-  componentDidMount() {
     const { slug } = this.props;
     const { getComments: loadComments } = this.props;
     loadComments(slug);
@@ -81,7 +78,9 @@ export class CommentsContainer extends Component {
    * @memberof CommentsContainer
    */
   createCommentListings = (comments) => {
-    const data = comments.map(comment => {
+    const data = comments && comments.map(comment => {
+      const { CommentLikes } = comment;
+
       const date = formatDate(comment.createdAt);
       return (
         <CommentCard
@@ -91,10 +90,10 @@ export class CommentsContainer extends Component {
           body={comment.body}
           avatar={comment.author.profile.avatar}
           author={comment.author}
-          createdAt={date.long}
-          likeCount={comment.likeCount}
-          like={() => this.likeComment(comment.id)}
-          unlike={() => this.unlikeComment(comment.id)}
+          createdAt={date.short}
+          likes={comment.CommentLikes.length}
+          userLike={this.findLike(CommentLikes)}
+          like={() => this.handleLikes(comment.id)}
           del={() => this.deleteComment(comment.id)}
         />
       );
@@ -125,6 +124,22 @@ export class CommentsContainer extends Component {
 
   /**
    *
+   * @param {*} CommentLikes
+   * @returns
+   * @memberof CommentsContainer
+   */
+  findLike(CommentLikes) {
+    let { user } = this.props;
+
+    if (CommentLikes.filter(like => like.userId === user.id).length > 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  /**
+   *
    * Delete a comment
    * @memberof CommentsContainer
    */
@@ -133,27 +148,27 @@ export class CommentsContainer extends Component {
     const { delComment } = this.props;
     delComment(id, slug);
   }
-  /**
-   *
-   * Like a comment
-   * @param {*} id of the comment to be liked
-   * @memberof CommentsContainer
-   */
-  likeComment(id) {
-    const { slug } = this.props;
-    const { likeComment } = this.props;
-    likeComment(id, slug);
-  }
 
   /**
    *
-   * Unlike a comment
-   * @param {*} id of the comment to be unliked
+   * Handle like/unlike logic
+   * @param {*} id of the comment
    * @memberof CommentsContainer
    */
-  unlikeComment(id) {
-    const { unlikeComment } = this.props;
-    unlikeComment(id);
+  handleLikes(id) {
+    const { slug } = this.props;
+    const { likeComment, unlikeComment, user, comments } = this.props;
+
+    const userId = user.id;
+
+    const comment = comments.filter(comment => comment.id === id);
+    const { CommentLikes } = comment[0];
+
+    if (CommentLikes.filter(like => like.userId === userId).length > 0) {
+      unlikeComment(id, slug);
+    } else {
+      likeComment(id, slug);
+    }
   }
 
   render() {
@@ -185,7 +200,7 @@ export class CommentsContainer extends Component {
             </div>
           </div>
         ) : '')
-      }
+        }
         {data}
         <Footer />
       </Fragment>

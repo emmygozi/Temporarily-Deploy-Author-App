@@ -17,11 +17,21 @@ import {
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
-  SET_GROUP_ARTICLES
+  SET_GROUP_ARTICLES,
+  UPDATE_ARTICLE_RATING,
+  ARTICLE_LIKE_SUCCESS,
+  ARTICLE_LIKE_ERROR,
+  ARTICLE_UNLIKE_SUCCESS,
+  ARTICLE_UNLIKE_ERROR
 } from './types';
 
 export const isLoading = () => ({
   type: IS_LOADING
+});
+
+export const updateRating = rate => ({
+  type: UPDATE_ARTICLE_RATING,
+  payload: rate
 });
 
 export const addArticleSuccess = article => ({
@@ -93,6 +103,26 @@ export const setArticleCategories = group => ({
   payload: group
 });
 
+export const fetchRatings = articleSlug => async dispatch => {
+  try {
+    const response = await axios.get(`/articles/${articleSlug}`);
+    dispatch(updateRating(Number(response.data.payload.averageRating), 10));
+  } catch (err) {
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
+  }
+};
+
+export const updateRatings = (rate, articleSlug) => async dispatch => {
+  try {
+    const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
+    dispatch(
+      updateRating(Number(response.data.payload.article.averageRating), 10)
+    );
+  } catch (err) {
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
+  }
+};
+
 export const createNewArticle = (data, history) => async dispatch => {
   try {
     dispatch(isLoading());
@@ -123,7 +153,7 @@ export const editArticle = (id, data, history) => async dispatch => {
 export const fetchArticles = () => async dispatch => {
   try {
     dispatch(isLoading());
-    const response = await axios.get('/articles?page=1&limit=20');
+    const response = await axios.get('/articles?page=1&limit=50');
     const articles = response.data.payload.rows;
 
     const categories = await dispatch(
@@ -177,10 +207,12 @@ export const getSingleArticle = id => async dispatch => {
   try {
     dispatch(isLoading());
     dispatch(clearSingleArticle());
-
     const response = await axios.get(`/articles/${id}`);
-
     dispatch(fetchArticleSuccess(response.data.payload));
+
+    dispatch(
+      updateRating(Number(response.data.payload.article.averageRating), 10)
+    );
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
@@ -224,5 +256,37 @@ export const fetchMoreArticles = nextPage => async dispatch => {
     dispatch(setNextPage(response.data.payload.metadata));
   } catch (error) {
     dispatch(fetchMoreArticlesFailure(error.response.data.errors.global));
+  }
+};
+
+// Like an article
+export const likeArticle = slug => async dispatch => {
+  try {
+    const res = await axios.post(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_LIKE_SUCCESS,
+      payload: res.data.payload
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_LIKE_ERROR,
+      payload: err.response.data.errors.global
+    });
+  }
+};
+
+// Unlike an article
+export const unlikeArticle = slug => async dispatch => {
+  try {
+    const res = await axios.delete(`/articles/${slug}/like`);
+    dispatch({
+      type: ARTICLE_UNLIKE_SUCCESS,
+      payload: res.data.payload
+    });
+  } catch (err) {
+    dispatch({
+      type: ARTICLE_UNLIKE_ERROR,
+      payload: err.response.data.errors.global
+    });
   }
 };

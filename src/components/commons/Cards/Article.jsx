@@ -50,9 +50,7 @@ export const extractArticleDetails = article => {
   });
 
   if (!image) {
-    image = `https://picsum.photos/1000/800?random=${Math.floor(
-      Math.random * 100
-    )}`;
+    image = `https://www.thefourcegroup.com/wp-content/uploads/importedmedia/importedmedia.jpg`;
   }
 
   var temp = document.createElement('div');
