@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import HTMLParser from 'react-html-parser';
+import Ellipsis from 'react-ellipsis-pjs';
 import Gravatar from '@base/img/article.jpg';
 import { formatDate } from '@utils/formatDate';
 
@@ -17,7 +17,7 @@ export const calculateRT = (text, wordsPerMinute = 100) => {
   return result;
 };
 
-export const extractArticleDetails = (article, isSmall) => {
+export const extractArticleDetails = article => {
   const {
     author: {
       profile: { firstname, lastname },
@@ -29,6 +29,9 @@ export const extractArticleDetails = (article, isSmall) => {
     createdAt,
     slug
   } = article;
+
+  let { desc } = article;
+
   let bodyObject = {};
   try {
     bodyObject = JSON.parse(fullBody);
@@ -47,21 +50,19 @@ export const extractArticleDetails = (article, isSmall) => {
   });
 
   if (!image) {
-    image = `https://picsum.photos/1000/800?random=${Math.floor(
-      Math.random * 100
-    )}`;
+    image = `https://www.thefourcegroup.com/wp-content/uploads/importedmedia/importedmedia.jpg`;
   }
 
-  let maxCharacters = 350;
-  if (isSmall) maxCharacters = 80;
-  let truncBody =
-    body.length >= maxCharacters ? `${body.slice(0, maxCharacters)}...` : body;
+  var temp = document.createElement('div');
+  temp.innerHTML = body;
+  let plainBody = temp.textContent || temp.innerText || '';
+  plainBody = plainBody.replace(/&nbsp;/g, '');
 
-  truncBody = HTMLParser(truncBody);
+  desc = desc || '<kingsmen>Summary</kingsmen>';
 
   return {
     title,
-    body: truncBody,
+    body: desc === '<kingsmen>Summary</kingsmen>' ? plainBody : desc,
     fullName: `${firstname || ''} ${lastname || ''}`,
     username,
     time: formatDate(createdAt).short,
@@ -132,7 +133,9 @@ function Article(props) {
               {title}
             </h2>
           </Link>
-          <p className='text-gray-600 h-10 overflow-hidden'>{body}</p>
+          <p className='text-gray-600 w-full bg-auto md:w-64 h-10 '>
+            <Ellipsis lines={2}>{body}</Ellipsis>
+          </p>
           <Link
             to={`/profile/${username}`}
             className='mr-3 hover:text-blue-700'
