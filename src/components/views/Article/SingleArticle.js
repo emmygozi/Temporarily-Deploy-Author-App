@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -60,15 +59,15 @@ class SingleArticle extends PureComponent {
     super(props);
 
     this.defaultAvatar =
-      'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
+      'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png'
 
-      const { article, fetchRatings, fetchUserRating, username } = this.props;
-      fetchRatings(article.slug);
-      fetchUserRating(article.slug, username);
-      
-      this.state = {
-        rate: undefined
-      }
+      const { getSingleArticle } = this.props;
+      const {
+        match: {
+          params: { articleId }
+        }
+      } = this.props;
+      getSingleArticle(articleId);
     }
 
   componentDidMount() {
@@ -81,6 +80,11 @@ class SingleArticle extends PureComponent {
     getSingleArticle(articleId);
     getAllTags(articleId);
 
+    const { article, fetchRatings, fetchUserRating, username } = this.props;
+    // if (article.slug === undefined) return '';
+
+    fetchRatings(article.slug);
+    fetchUserRating(article.slug, username);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -120,10 +124,6 @@ class SingleArticle extends PureComponent {
     const rate = {
       rate: rated.rating
     }
-    this.setState({
-      rate: rated.rating
-    })
-    console.log(article.slug);
     
     updateRatings(rate, article.slug);
   }
@@ -152,7 +152,6 @@ class SingleArticle extends PureComponent {
 
   render() {
     const { article, tags, isAuthenticated, rating, userRating } = this.props;
-    const {rate} = this.state;
 
     const { ArticleLikes: likes } = article;
     const userLike = this.findLike(likes);
@@ -227,6 +226,11 @@ class SingleArticle extends PureComponent {
                 <ArticleRating
                   averageRating={rating ? rating : 0}
                 />
+                {isAuthenticated ? '' : (
+                  <p className="mt-3 text-xs">
+                  You need to login in to rate or like an article
+                  </p>
+                )}
               </span>
             </div>
           </div>
@@ -235,7 +239,14 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={rate ? rate : userRating} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <div className="mt-3 text-xs">
+              {isAuthenticated ? <Rater total={5} rating={userRating ? userRating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} /> : (
+                <p>
+                You need to be logged in to rate an article
+                </p>
+  )
+            }
+            </div>
           </div>
 
           <div className='comments my-4'>

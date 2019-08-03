@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import {
@@ -107,11 +106,9 @@ export const getTagsFailure = errors => ({
 
 export const fetchUserRating = ( articleSlug, username ) => async dispatch => {
   try {
-    console.log(articleSlug);
     
     const response = await axios.get(`/articles/${articleSlug}/rate`);
     const rateObject = response.data.payload.ratings.filter(rate => rate.rater.username === username);
-    console.log(response);
     
     dispatch(updateUserRating(Number(rateObject[0].ratings), 10));
   } catch (err) {
@@ -137,6 +134,9 @@ export const updateRatings = (rate, articleSlug) => async dispatch => {
   try {
     const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
     dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
+    
+    dispatch(updateUserRating(Number(rate.rate), 10));
+
 
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
@@ -229,8 +229,7 @@ export const getSingleArticle = id => async dispatch => {
     dispatch(clearSingleArticle());
     const response = await axios.get(`/articles/${id}`);
     dispatch(fetchArticleSuccess(response.data.payload));
-    
-    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
+    dispatch(updateRating(Number(response.data.payload.averageRating), 10));
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
