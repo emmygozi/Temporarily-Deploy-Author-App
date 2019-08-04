@@ -7,7 +7,7 @@ import {
   DELETE_ARTICLE_SUCCESS,
   DELETE_ARTICLE_FAILURE,
   UPDATE_PROFILE_SUCCESS,
-  UPDATE_PROFILE_FAILURE
+  UPDATE_PROFILE_FAILURE,
 } from '../actions/types';
 
 const initialState = {

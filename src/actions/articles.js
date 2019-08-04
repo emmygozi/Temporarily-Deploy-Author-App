@@ -21,7 +21,7 @@ import {
   GET_MORE_ARTICLES_FAILURE,
   SET_NEXT_PAGE,
   CLEAR_SINGLE_ARTICLE,
-  UPDATE_ARTICLE_RATING,
+  UPDATE_USER_RATING,
   SET_GROUP_ARTICLES,
   ARTICLE_LIKE_SUCCESS,
   ARTICLE_LIKE_ERROR,
@@ -33,8 +33,8 @@ export const isLoading = () => ({
   type: IS_LOADING
 });
 
-export const updateRating = rate => ({
-  type: UPDATE_ARTICLE_RATING,
+export const updateUserRating = rate => ({
+  type: UPDATE_USER_RATING,
   payload: rate
 });
 
@@ -48,7 +48,7 @@ export const addArticleFailure = error => ({
   payload: error
 });
 
-export const clearSingleArticle = () => ({
+export const clearSingleArticle = () => dispatch => dispatch({
   type: CLEAR_SINGLE_ARTICLE
 });
 
@@ -112,24 +112,30 @@ export const getTagsFailure = errors => ({
   payload: errors
 });
 
+export const fetchUserRating = ( articleSlug, username ) => async dispatch => {
+  try {
+    
+    const response = await axios.get(`/articles/${articleSlug}/rate`);
+    
+    const rateObject = response.data.payload.ratings.filter(rate => rate.rater.username === username);
+    
+    dispatch(updateUserRating(Number(rateObject[0].ratings), 10));
+  } catch (err) {
+    dispatch(fetchArticlesFailure(err.response.data.errors.global));
+  }
+};
 export const setArticleCategories = group => ({
   type: SET_GROUP_ARTICLES,
   payload: group
 });
 
-export const fetchRatings = articleSlug => async dispatch => {
-  try {
-    const response = await axios.get(`/articles/${articleSlug}`);
-    dispatch(updateRating(Number(response.data.payload.averageRating), 10));
-  } catch (err) {
-    dispatch(fetchArticlesFailure(err.response.data.errors.global));
-  }
-};
-
 export const updateRatings = (rate, articleSlug) => async dispatch => {
   try {
-    const response = await axios.post(`/articles/${articleSlug}/rate`, rate);
-    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
+    await axios.post(`/articles/${articleSlug}/rate`, rate);
+    
+    dispatch(updateUserRating(Number(rate.rate), 10));
+
+
   } catch (err) {
     dispatch(fetchArticlesFailure(err.response.data.errors.global));
   }
@@ -215,14 +221,13 @@ export const getAllTags = slug => async dispatch => {
   }
 };
 
-export const getSingleArticle = id => async dispatch => {
+export const getSingleArticle = (id, dispatchLoading = true) => async dispatch => {
   try {
-    dispatch(isLoading());
-    dispatch(clearSingleArticle());
+    if (dispatchLoading) {
+      dispatch(isLoading());
+    }
     const response = await axios.get(`/articles/${id}`);
     dispatch(fetchArticleSuccess(response.data.payload));
-    
-    dispatch(updateRating(Number(response.data.payload.article.averageRating), 10));
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }

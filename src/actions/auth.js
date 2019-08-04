@@ -11,7 +11,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
   ACTIVATE_SUCCESS,
-  ACTIVATE_FAILURE
+  ACTIVATE_FAILURE,
 } from './types';
 import { fetchArticles } from './articles';
 

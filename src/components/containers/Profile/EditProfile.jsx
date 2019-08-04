@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/label-has-for */
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -59,7 +61,7 @@ class EditProfile extends Component {
         if (result.data.url) {
             return result.data.url;
         } else {
-          toast.error('Error in Input');
+          toast.error(error, 'Error in Input');
         }
     });
   }
