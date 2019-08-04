@@ -182,15 +182,13 @@ export class Header extends Component {
       <Fragment>
         {!authHidden || showSearchBar ? (
           <div
-            className='w-full h-screen bg-gray absolute z-10 opacity-75'
+            className='w-full h-screen bg-gray fixed opacity-75'
             onClick={this.hideDropDownMenu}
             onKeyDown={this.hideDropDownMenu}
             role='presentation'
           />
-        ) : (
-          ''
-        )}
-        <div className='bg-white shadow relative z-20'>
+        ) : ('')}
+        <div className='bg-white shadow sticky z-20'>
           <div className='container mx-auto px-4'>
             <div className='flex items-center justify-between py-4'>
               <div className='flex'>
@@ -243,7 +241,7 @@ export class Header extends Component {
 
         <div
           className={classname({
-            'block bg-white border-t-2 py-2 shadow-lg absolute right-0 w-full md:w-2/5 lg:w-1/2 z-20': true,
+            'block bg-white border-t-2 py-2 shadow-lg fixed right-0 w-full md:w-2/5 lg:w-1/2 z-20': true,
             hidden: authHidden,
             'lg:max-w-xs': !showSearchBar
           })}
