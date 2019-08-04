@@ -18,6 +18,10 @@ import 'react-rater/lib/react-rater.css'
 import './index.scss';
 
 class SingleArticle extends PureComponent {
+  static defaultProps = {
+    rating: 0,
+  }
+
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -48,7 +52,7 @@ class SingleArticle extends PureComponent {
     getSingleArticle: PropTypes.func.isRequired,
     getAllTags: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    rating: PropTypes.number.isRequired,
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     updateRatings: PropTypes.func.isRequired,
     fetchUserRating: PropTypes.func.isRequired
   };
@@ -206,7 +210,7 @@ class SingleArticle extends PureComponent {
                   averageRating={rating ? rating : 0}
                 />
                 {isAuthenticated ? '' : (
-                  <p className="mt-3 text-xs">
+                  <p className="mt-3 text-xs text-red-600">
                   You need to login in to rate or like an article. 
                   </p>
                 )}
@@ -220,8 +224,8 @@ class SingleArticle extends PureComponent {
             <Tags tags={tags} />
             <div className="mt-3 text-xs">
               {isAuthenticated ? <Rater total={5} rating={userRating || 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} /> : (
-                <p>
-                You need to be logged in to rate an article
+                <p className="text-red-600">
+                We know you would like to rate this article, why not login or register to give this article a rate.
                 </p>
   )
             }
