@@ -17,7 +17,6 @@ import convertToJSON from '../../../helpers/convertToJSON';
 import 'react-rater/lib/react-rater.css'
 import './index.scss';
 
-
 class SingleArticle extends PureComponent {
   static propTypes = {
     match: PropTypes.shape({
@@ -51,7 +50,6 @@ class SingleArticle extends PureComponent {
     isAuthenticated: PropTypes.bool.isRequired,
     rating: PropTypes.number.isRequired,
     updateRatings: PropTypes.func.isRequired,
-    fetchRatings: PropTypes.func.isRequired,
     fetchUserRating: PropTypes.func.isRequired
   };
 
@@ -60,14 +58,6 @@ class SingleArticle extends PureComponent {
 
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png'
-
-      const { getSingleArticle } = this.props;
-      const {
-        match: {
-          params: { articleId }
-        }
-      } = this.props;
-      getSingleArticle(articleId);
     }
 
   componentDidMount() {
@@ -76,34 +66,23 @@ class SingleArticle extends PureComponent {
         params: { articleId }
       }
     } = this.props;
-    const { getSingleArticle, getAllTags } = this.props;
+    const { getSingleArticle, getAllTags, fetchUserRating, username } = this.props;
     getSingleArticle(articleId);
     getAllTags(articleId);
-
-    const { article, fetchRatings, fetchUserRating, username } = this.props;
-    // if (article.slug === undefined) return '';
-
-    fetchRatings(article.slug);
-    fetchUserRating(article.slug, username);
+    fetchUserRating(articleId, username);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {
-      match: {
-        params: { articleId }
-      },
-      getSingleArticle,
-      getAllTags
-    } = this.props;
-    const {
-      match: {
-        params: { articleId: newArticleId }
-      }
-    } = nextProps;
-    if (articleId !== newArticleId) {
-      getSingleArticle(newArticleId);
-      getAllTags(newArticleId);
+  componentDidUpdate(prevProps) {
+    const { getSingleArticle, userRating } = this.props;
+
+    if (prevProps.userRating !== userRating) {
+      getSingleArticle(prevProps.match.params.articleId, false);
     }
+  }
+
+  componentWillUnmount() {
+    const { clearSingleArticle } = this.props;
+    clearSingleArticle();
   }
 
   formatString = string => {
@@ -160,7 +139,7 @@ class SingleArticle extends PureComponent {
       return (
         <Preloader
           type='page'
-          styles='Triangle'
+          styles='ThreeDots'
           width={80}
           height={80}
           color='blue'
@@ -228,7 +207,7 @@ class SingleArticle extends PureComponent {
                 />
                 {isAuthenticated ? '' : (
                   <p className="mt-3 text-xs">
-                  You need to login in to rate or like an article
+                  You need to login in to rate or like an article. 
                   </p>
                 )}
               </span>
@@ -240,7 +219,7 @@ class SingleArticle extends PureComponent {
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
             <div className="mt-3 text-xs">
-              {isAuthenticated ? <Rater total={5} rating={userRating ? userRating : 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} /> : (
+              {isAuthenticated ? <Rater total={5} rating={userRating || 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} /> : (
                 <p>
                 You need to be logged in to rate an article
                 </p>
@@ -248,7 +227,6 @@ class SingleArticle extends PureComponent {
             }
             </div>
           </div>
-
           <div className='comments my-4'>
             <h2 className='text-lg font-semibold comment-res'>Responses</h2>
           </div>

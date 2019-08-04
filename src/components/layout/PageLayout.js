@@ -19,7 +19,7 @@ function PageLayout(props) {
       ) : (
         <Preloader
           type="page"
-          styles="Triangle"
+          styles="ThreeDots"
           width={80}
           height={80}
           color="blue"

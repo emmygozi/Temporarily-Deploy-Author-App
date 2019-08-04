@@ -1,42 +1,64 @@
 import {
-  UPDATE_PROFILE, FETCH_GUEST_PROFILE, GET_GUEST_PROFILE_ERROR, RESET_PROFILE
+  PROFILE_LOADING,
+  FETCH_PROFILE_SUCCESS,
+  FETCH_PROFILE_FAILURE,
+  FETCH_USER_ARTICLES_SUCCESS,
+  FETCH_USER_ARTICLES_FAILURE,
+  DELETE_ARTICLE_SUCCESS,
+  DELETE_ARTICLE_FAILURE,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_FAILURE,
 } from '../actions/types';
 
 const initialState = {
   profile: {},
-  guest: {},
-  guestError: {}
+  articles: [],
+  loading: false,
+  errors: {}
 };
 
-const profileReducer = (state = initialState, action) => {
+export default (state = initialState, action) => {
+  const removeArticle = (payload) => state.articles.filter(article => article.id !== payload.id);
   switch(action.type) {
-    
-    case UPDATE_PROFILE:
+    case PROFILE_LOADING:
       return {
         ...state,
-        profile: action.payload
+        loading: true,
+      };
+    case DELETE_ARTICLE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        articles: removeArticle(action.payload)
       }
-    case FETCH_GUEST_PROFILE:
+    case FETCH_PROFILE_SUCCESS:
+    case UPDATE_PROFILE_SUCCESS:
       return {
         ...state,
-        guest: action.payload
+        profile: action.payload,
+        loading: false
       }
-    case GET_GUEST_PROFILE_ERROR:
+    case FETCH_PROFILE_FAILURE:
       return {
         ...state,
-        guestError: action.payload
+        errors: action.payload,
+        loading: false
       }
-    case RESET_PROFILE:
+    case FETCH_USER_ARTICLES_SUCCESS:
       return {
         ...state,
-        profile: {},
-        guest: {},
-        guestError: {},
-        errors: {}
+        loading: false,
+        articles: action.payload
+      };
+    case FETCH_USER_ARTICLES_FAILURE:
+    case DELETE_ARTICLE_FAILURE:
+    case UPDATE_PROFILE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        errors: action.payload
       }
     default:
       return state;
   }
 };
-
-export default profileReducer;

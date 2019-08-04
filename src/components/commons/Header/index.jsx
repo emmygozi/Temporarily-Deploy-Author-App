@@ -84,9 +84,21 @@ export class Header extends Component {
     }
   };
 
+  redirectToNewArticle = () => {
+    const { history } = this.props;
+    history.push('/new-article');
+  };
+
   authHeaderButtons = avatar => {
     return (
       <Fragment>
+        <button
+          type='button'
+          className='bg-transparent hover:text-white py-2 px-4 border rounded mr-2 text-sm hover:bg-blue-700 border-blue-700 hover:border-transparent'
+          onClick={this.redirectToNewArticle}
+        >
+          New Article
+        </button>
         <div className='flex items-center'>
           <FontAwesome
             type={faSearch}
@@ -96,7 +108,6 @@ export class Header extends Component {
             onClick={this.showSearchBar}
           />
         </div>
-
         <img
           src={avatar || this.defaultAvatar}
           alt='ProfileImage'
