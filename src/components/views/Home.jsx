@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, createRef } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
@@ -7,12 +7,14 @@ import classNames from 'classnames';
 import moment from 'moment';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
+import { faArrowLeft, faArrowRight } from '@fortawesome/fontawesome-free-solid';
 import Header from '@components/commons/Header';
 import NavBar from '@components/commons/NavBar';
 import ArticleCard, {
   extractArticleDetails
 } from '@components/commons/Cards/Article';
 import { fetchArticles, fetchMoreArticles } from '@actions/articles';
+import FontAwesome from '../commons/utilities/FontAwesome';
 
 class Home extends Component {
   constructor(props) {
@@ -23,6 +25,15 @@ class Home extends Component {
       isMounting: true
     };
     this.articles = [];
+
+    this.familyNextRef = createRef();
+    this.familyPreviousRef = createRef();
+
+    this.peopleNextRef = createRef();
+    this.peoplePreviousRef = createRef();
+
+    this.andelaNextRef = createRef();
+    this.andelaPreviousRef = createRef();
   }
 
   async componentDidMount() {
@@ -134,6 +145,7 @@ class Home extends Component {
         return found;
       });
     }
+
     return { mostRated, mostRecent, others, family, andela, people };
   };
 
@@ -160,6 +172,66 @@ class Home extends Component {
       </div>
     </div>
   );
+
+  familyPrevious = () => {
+    const reference = this.familyPreviousRef;
+    if (reference) {
+      reference.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  };
+
+  familyNext = () => {
+    const reference = this.familyNextRef;
+    if (reference) {
+      reference.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  };
+
+  andelaPrevious = () => {
+    const reference = this.andelaPreviousRef;
+    if (reference) {
+      reference.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  };
+
+  andelaNext = () => {
+    const reference = this.andelaNextRef;
+    if (reference) {
+      reference.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  };
+
+  peoplePrevious = () => {
+    const reference = this.peoplePreviousRef;
+    if (reference) {
+      reference.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  };
+
+  peopleNext = () => {
+    const reference = this.peopleNextRef;
+    if (reference) {
+      reference.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  };
 
   handleScroll = event => {
     const {
@@ -189,6 +261,7 @@ class Home extends Component {
       const { image, title, slug, fullName, username } = extractArticleDetails(
         article
       );
+
       return (
         <div
           className='bg-white shadow-md mb-2 rounded overflow-hidden hover:shadow-lg card--content'
@@ -241,9 +314,9 @@ class Home extends Component {
       people
     } = this.groupArticles(articles);
     const { currentArticle, currentIndex, isMounting } = this.state;
-    const familyTags = this.getArticleGroup(family);
-    const andelaTags = this.getArticleGroup(andela);
-    const peopleTags = this.getArticleGroup(people);
+    const familyTags = this.getArticleGroup(family, 'family');
+    const andelaTags = this.getArticleGroup(andela, 'andela');
+    const peopleTags = this.getArticleGroup(people, 'people');
 
     return (
       <div
@@ -349,21 +422,105 @@ class Home extends Component {
                 Family
               </h1>
             )}
-            <section className='card'>{familyTags}</section>
+            <div className='flex relative'>
+              <div className='slider-prev-arrow'>
+                <div className='slider-arrow-background-left' />
+                <FontAwesome
+                  type={faArrowLeft}
+                  styleClass='slider-image-icon'
+                  id='family-section'
+                  role='presentation'
+                  onClick={this.familyPrevious}
+                  onKeyDown={this.familyPrevious}
+                />
+              </div>
+              <section className='card'>
+                <p ref={this.familyPreviousRef} />
+                {familyTags}
+                <p ref={this.familyNextRef} />
+              </section>
+              <div className='slider-next-arrow'>
+                <div className='slider-arrow-background-right' />
+                <FontAwesome
+                  type={faArrowRight}
+                  styleClass='slider-image-icon'
+                  id='family-section'
+                  role='presentation'
+                  onClick={this.familyNext}
+                  onKeyDown={this.familyNext}
+                />
+              </div>
+            </div>
 
             {andelaTags.length > 0 && (
               <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
                 Andela
               </h1>
             )}
-            <section className='card'>{andelaTags}</section>
+            <div className='flex relative'>
+              <div className='slider-prev-arrow'>
+                <div className='slider-arrow-background-left' />
+                <FontAwesome
+                  type={faArrowLeft}
+                  styleClass='slider-image-icon'
+                  id='andela-section'
+                  role='presentation'
+                  onClick={this.andelaPrevious}
+                  onKeyDown={this.andelaPrevious}
+                />
+              </div>
+              <section className='card'>
+                <p ref={this.andelaPreviousRef} />
+                {andelaTags}
+                <p ref={this.andelaNextRef} />
+              </section>
+              <div className='slider-next-arrow'>
+                <div className='slider-arrow-background-right' />
+                <FontAwesome
+                  type={faArrowRight}
+                  styleClass='slider-image-icon'
+                  id='andela-section'
+                  role='presentation'
+                  onClick={this.andelaNext}
+                  onKeyDown={this.andelaNext}
+                />
+              </div>
+            </div>
 
             {peopleTags.length > 0 && (
               <h1 className='text-gray-600 my-4 text-sm font-semibold uppercase'>
                 People
               </h1>
             )}
-            <section className='card'>{peopleTags}</section>
+            <div className='flex relative'>
+              <div className='slider-prev-arrow'>
+                <div className='slider-arrow-background-left' />
+                <FontAwesome
+                  type={faArrowLeft}
+                  styleClass='slider-image-icon'
+                  id='people-section'
+                  role='presentation'
+                  onClick={this.peoplePrevious}
+                  onKeyDown={this.peoplePrevious}
+                />
+              </div>
+              <section className='card'>
+                <p ref={this.peoplePreviousRef} />
+                {peopleTags}
+                <p ref={this.peopleNextRef} />
+              </section>
+              <div className='slider-next-arrow'>
+                <div className='slider-arrow-background-right' />
+                <FontAwesome
+                  type={faArrowRight}
+                  styleClass='slider-image-icon'
+                  id='people-section'
+                  role='presentation'
+                  onClick={this.peopleNext}
+                  onKeyDown={this.peopleNext}
+                />
+              </div>
+            </div>
 
             {others.length > 0 && (
               <h1 className='text-gray-600 mt-4 text-sm font-semibold uppercase'>
