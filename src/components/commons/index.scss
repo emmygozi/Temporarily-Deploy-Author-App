@@ -223,5 +223,9 @@ button:disabled {
 .sticky{
   top: 0;
   width: 100%;
+  transition: top 0.4s;
 }
 
+.notVisible{
+  top: -70px !important;
+}
