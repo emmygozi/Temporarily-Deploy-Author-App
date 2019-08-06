@@ -24,12 +24,35 @@ export class Header extends Component {
       showSignInModal: false,
       showSignUpModal: false,
       showSearchResult: false,
-      searchResult: []
+      searchResult: [],
+      prevScrollpos: window.pageYOffset,
+      visible: true
     };
 
     this.defaultAvatar =
       'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
   }
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  handleScroll = () => {
+    const { prevScrollpos } = this.state
+   
+    const currentScrollPos = window.pageYOffset;
+    const isVisible = prevScrollpos > currentScrollPos;
+   
+    this.setState({
+      prevScrollpos: currentScrollPos,
+      visible: isVisible
+    });
+  }
+
 
   exitModal = () => {
     this.setState({ showSignUpModal: false, showSignInModal: false });
@@ -172,7 +195,8 @@ export class Header extends Component {
       showSignInModal,
       showSignUpModal,
       showSearchResult,
-      searchResult
+      searchResult,
+      visible
     } = this.state;
     const { user, isAuthenticated, profile } = this.props;
     const { avatar, firstname, lastname } = profile;
@@ -182,13 +206,17 @@ export class Header extends Component {
       <Fragment>
         {!authHidden || showSearchBar ? (
           <div
-            className='w-full h-screen bg-gray fixed opacity-75'
+            className='w-full h-screen bg-gray fixed opacity-75 z-20'
             onClick={this.hideDropDownMenu}
             onKeyDown={this.hideDropDownMenu}
             role='presentation'
           />
         ) : ('')}
-        <div className='bg-white shadow sticky z-20'>
+        <div
+          className={classname('bg-white shadow sticky z-20', {
+            'notVisible': !visible
+          })}
+        >
           <div className='container mx-auto px-4'>
             <div className='flex items-center justify-between py-4'>
               <div className='flex'>
@@ -221,8 +249,8 @@ export class Header extends Component {
                     <path d='M64 384h384v-42.666H64V384zm0-106.666h384v-42.667H64v42.667zM64 128v42.665h384V128H64z' />
                   </svg>
                 ) : (
-                  this.authHeaderButtons(avatar)
-                )}
+                    this.authHeaderButtons(avatar)
+                  )}
               </div>
             </div>
 
@@ -289,8 +317,8 @@ export class Header extends Component {
                 </Button>
               </div>
             ) : (
-              ''
-            )}
+                ''
+              )}
 
             {isAuthenticated && showSearchBar ? (
               <input
@@ -301,8 +329,8 @@ export class Header extends Component {
                 onChange={this.handleSearch}
               />
             ) : (
-              ''
-            )}
+                ''
+              )}
           </div>
           {showSearchResult ? (
             <div className='overflow-scroll searchContainer'>
@@ -330,8 +358,8 @@ export class Header extends Component {
               })}
             </div>
           ) : (
-            ''
-          )}
+              ''
+            )}
         </div>
 
         {showSignInModal && !isAuthenticated ? (
@@ -339,16 +367,16 @@ export class Header extends Component {
             {<LoginPage showSignup={this.showSignupDialog} />}
           </Modal>
         ) : (
-          ''
-        )}
+            ''
+          )}
 
         {showSignUpModal && !isAuthenticated ? (
           <Modal title="Join Author's Haven" exitModal={this.exitModal} toggle>
             {<SignupPage showSignin={this.showSigninDialog} />}
           </Modal>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </Fragment>
     );
   }

@@ -10,7 +10,6 @@ import SingleArticle from '../containers/views/Article/SingleArticle';
 import EditArticle from '../containers/views/Article/EditArticle';
 import NewArticle from '../containers/views/Article/NewArticle';
 import Authenticator from '../containers/hoc/Authenticator';
-import AuthorizeArticle from '../containers/hoc/AuthorizeArticle';
 import AuthorizeProfile from '../containers/hoc/AuthorizeProfile';
 
 
@@ -22,7 +21,7 @@ const Routes = () => (
       <Route exact path="/new-article" component={Authenticator(NewArticle)} />
       <Route exact path="/auth/activate_user" component={ActivateUser} />
       <Route exact path="/article/:articleId" component={SingleArticle} />
-      <Route exact path="/article/:articleId/edit" component={AuthorizeArticle(Authenticator(EditArticle))} />
+      <Route exact path="/article/:articleId/edit" component={(Authenticator(EditArticle))} />
       <Route exact path="/profile/:username" component={Profile} />
       <Route exact path="/profile/:username/edit" component={AuthorizeProfile(EditProfile)} />
       

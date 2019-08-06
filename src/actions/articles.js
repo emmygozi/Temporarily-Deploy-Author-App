@@ -228,6 +228,8 @@ export const getSingleArticle = (id, dispatchLoading = true) => async dispatch =
     }
     const response = await axios.get(`/articles/${id}`);
     dispatch(fetchArticleSuccess(response.data.payload));
+    
+    dispatch(updateRatings(Number(response.data.payload.averageRating), 10));
   } catch (error) {
     dispatch(fetchArticleFailure(error.response.data.errors.global));
   }
@@ -235,7 +237,7 @@ export const getSingleArticle = (id, dispatchLoading = true) => async dispatch =
 
 export const getUserArticle = id => async (dispatch) => {
   try {
-    const response = await axios('/articles?page=1&limit=50');
+    const response = await axios('/articles?page=1&limit=100');
     const result = response.data.payload.rows.filter(article => article.author.id === id);
 
     dispatch(fetchUserArticleSuccess(result));

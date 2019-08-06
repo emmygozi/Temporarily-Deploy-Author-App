@@ -223,6 +223,7 @@ button:disabled {
 .sticky {
   top: 0;
   width: 100%;
+  transition: top 0.4s;
 }
 
 .slider-prev-arrow,
@@ -275,4 +276,8 @@ button:disabled {
 
 .slider-arrow-background-right {
   right: -1px;
+}
+
+.notVisible {
+  top: -70px !important;
 }

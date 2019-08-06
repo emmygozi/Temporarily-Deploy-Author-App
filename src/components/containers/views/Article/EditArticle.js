@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 const mapStateToProps = state => ({
   loading: state.article.loading,
+  user: state.auth.user,
   article: state.article.article,
   errors: state.article.errors
 });
