@@ -182,7 +182,7 @@ export class Header extends Component {
       <Fragment>
         {!authHidden || showSearchBar ? (
           <div
-            className='w-full h-screen bg-gray fixed opacity-75'
+            className='w-full h-screen bg-gray fixed opacity-75 z-20'
             onClick={this.hideDropDownMenu}
             onKeyDown={this.hideDropDownMenu}
             role='presentation'

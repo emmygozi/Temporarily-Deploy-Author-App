@@ -38,11 +38,16 @@ class EditArticle extends Component {
   constructor(props) {
     super(props);
     this.title = React.createRef();
-    const { article } = this.props;
+    const { article: { title } } = this.props;
 
     this.state = {
-      title: `${article.title}`,
+      title: title,
     };
+  }
+
+  componentDidMount() {
+    const { getSingleArticle, match: { params: { articleId } } } = this.props;
+    getSingleArticle(articleId);
   }
 
   onChange = (e) => {
@@ -60,14 +65,14 @@ class EditArticle extends Component {
   }
 
   editArticle = () => {
-    const { match: { params: {articleId} } } = this.props;
+    const { match: { params: {articleId} }, article } = this.props;
     const { editArticle, history } = this.props
     const { title } = this.state;
     this.editor.isReady
       .then(() => {
         this.editor.save().then((outputData) => {
           const values = {
-            title,
+            title: title || article.title,
             body: JSON.stringify(outputData),
           };
 
@@ -80,11 +85,16 @@ class EditArticle extends Component {
   }
 
   render() {
-    const { article } = this.props;
+    const { article, user, history } = this.props;
+    const { match: { params: {articleId} } } = this.props;
+    const { title } = this.state;
     const body = this.getBodyObject(article.body);
-    
-    if (!this.editor) {
+
+    if (article.body && !this.editor) {
       this.editor = Editor(body);
+      if (article.author.id !== user.id) {
+        history.push(`/article/${articleId}`);
+      }
     }
 
     return (
@@ -100,6 +110,7 @@ class EditArticle extends Component {
             className="textarea"
             name="title"
             defaultValue={article.title}
+            value={title}
             onChange={this.onChange}
             placeholder="Title"
             maxLength="50"
