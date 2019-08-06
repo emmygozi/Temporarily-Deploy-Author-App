@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/label-has-for */
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -43,7 +45,8 @@ class EditProfile extends Component {
   }
 
   cancel = () => {
-    return Redirect
+    const { match: { params: { username } }, history } = this.props;
+    history.push(`/profile/${username}`);
   }
 
   uploadImageCallBack = (file) => {
@@ -63,13 +66,13 @@ class EditProfile extends Component {
         if (result.data.url) {
             return result.data.url;
         } else {
-          toast.error('Error in Input');
+          toast.error(error, 'Error in Input');
         }
     });
   }
 
   updateArticle = () => {
-    const { updateProfile } = this.props;
+    const { updateProfile, history, match: { params: { username } } } = this.props;
     const { firstname, lastname, avatar, bio, location, phone } = this.state;
     const values = {
       firstname,
@@ -79,7 +82,7 @@ class EditProfile extends Component {
       location,
       phone
     };
-    updateProfile(values);
+    updateProfile(values, username, history);
   }
 
   render() {
@@ -110,7 +113,6 @@ class EditProfile extends Component {
             </div>
           </div>
 
-          <h3 className="uppercase text-xl font-normal font-semibold my-4">Profile</h3>
           <div className="mt-4 profile-form">
             <form className="flex flex-col w-full" onSubmit={this.updateArticle}>
               <div className="my-4 relative mb-8 no-effect uppercase">

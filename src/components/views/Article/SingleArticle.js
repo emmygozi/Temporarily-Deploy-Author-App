@@ -5,7 +5,6 @@ import Rater from 'react-rater';
 import Tags from '@components/commons/Cards/Tags';
 import ReactHtmlParser from 'react-html-parser';
 import Helmet from 'react-helmet';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { calculateRT } from "@components/commons/Cards/Article";
 import PageLayout from '@components/layout/PageLayout';
@@ -13,14 +12,16 @@ import ArticleRating from '@components/commons/Cards/displayStar';
 import FontAwesome from '@components/commons/utilities/FontAwesome';
 import { faThumbsUp } from '@fortawesome/fontawesome-free-solid'
 import Preloader from '@components/commons/Preloader';
-import { likeArticle, unlikeArticle } from '@actions/articles';
 import CommentsContainer from '../../../containers/CommentsContainer';
 import convertToJSON from '../../../helpers/convertToJSON';
 import 'react-rater/lib/react-rater.css'
 import './index.scss';
 
-
 class SingleArticle extends PureComponent {
+  static defaultProps = {
+    rating: 0,
+  }
+
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -51,23 +52,16 @@ class SingleArticle extends PureComponent {
     getSingleArticle: PropTypes.func.isRequired,
     getAllTags: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
-    rating: PropTypes.number.isRequired,
+    rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     updateRatings: PropTypes.func.isRequired,
-    fetchRatings: PropTypes.func.isRequired
+    fetchUserRating: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
 
     this.defaultAvatar =
-      'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png';
-      this.state = {
-        rate: 0
-      }
-
-      const { article, fetchRatings } = props;
-      fetchRatings(article.slug);
-      
+      'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-512.png'
     }
 
   componentDidMount() {
@@ -76,30 +70,23 @@ class SingleArticle extends PureComponent {
         params: { articleId }
       }
     } = this.props;
-    const { getSingleArticle, getAllTags } = this.props;
+    const { getSingleArticle, getAllTags, fetchUserRating, username } = this.props;
     getSingleArticle(articleId);
     getAllTags(articleId);
-
+    fetchUserRating(articleId, username);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {
-      match: {
-        params: { articleId }
-      },
-      getSingleArticle,
-      getAllTags
-    } = this.props;
-    
-    const {
-      match: {
-        params: { articleId: newArticleId }
-      }
-    } = nextProps;
-    if (articleId !== newArticleId) {
-      getSingleArticle(newArticleId);
-      getAllTags(newArticleId);
+  componentDidUpdate(prevProps) {
+    const { getSingleArticle, userRating } = this.props;
+
+    if (prevProps.userRating !== userRating) {
+      getSingleArticle(prevProps.match.params.articleId, false);
     }
+  }
+
+  componentWillUnmount() {
+    const { clearSingleArticle } = this.props;
+    clearSingleArticle();
   }
 
   formatString = string => {
@@ -117,12 +104,10 @@ class SingleArticle extends PureComponent {
 
   rateArticle = rated => {
     const { article, updateRatings } = this.props;
-    this.setState({
-      rate: rated.rating
-    })
     const rate = {
       rate: rated.rating
     }
+    
     updateRatings(rate, article.slug);
   }
 
@@ -149,11 +134,10 @@ class SingleArticle extends PureComponent {
   }
 
   render() {
-    const { article, tags, isAuthenticated, rating } = this.props;
+    const { article, tags, isAuthenticated, rating, userRating } = this.props;
+
     const { ArticleLikes: likes } = article;
     const userLike = this.findLike(likes);
-  
-    const { rate } = this.state;
     
     if (!article.author) {
       return (
@@ -225,6 +209,11 @@ class SingleArticle extends PureComponent {
                 <ArticleRating
                   averageRating={rating ? rating : 0}
                 />
+                {isAuthenticated ? '' : (
+                  <p className="mt-3 text-xs blueish">
+                  Love this article? Sign in to rate or like
+                  </p>
+                )}
               </span>
             </div>
           </div>
@@ -233,10 +222,15 @@ class SingleArticle extends PureComponent {
 
           <div className='py-5 border-b-2'>
             <Tags tags={tags} />
-            <Rater total={5} rating={rate} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} />
+            <div className="mt-3 text-xs">
+              {isAuthenticated ? <Rater total={5} rating={userRating || 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} /> : (
+                <p className="blueish">
+                Love this article? Sign in to rate
+                </p>
+  )
+            }
+            </div>
           </div>
-
-
           <div className='comments my-4'>
             <h2 className='text-lg font-semibold comment-res'>Responses</h2>
           </div>
@@ -248,10 +242,4 @@ class SingleArticle extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
-  profile: state.auth.profile
-});
-
-export default connect(mapStateToProps, { likeArticle, unlikeArticle })(SingleArticle);
+export default SingleArticle;

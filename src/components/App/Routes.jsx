@@ -10,7 +10,6 @@ import SingleArticle from '../containers/views/Article/SingleArticle';
 import EditArticle from '../containers/views/Article/EditArticle';
 import NewArticle from '../containers/views/Article/NewArticle';
 import Authenticator from '../containers/hoc/Authenticator';
-import AuthorizeArticle from '../containers/hoc/AuthorizeArticle';
 import AuthorizeProfile from '../containers/hoc/AuthorizeProfile';
 
 

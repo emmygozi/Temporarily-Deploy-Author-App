@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import ReactModal from 'react-modal';
+import { Helmet } from 'react-helmet';
 import { extractArticleDetails, calculateRT } from '@components/commons/Cards/Article';
 import Preloader from '@components/commons/Preloader';
 import PageLayout from '@components/layout/PageLayout';
@@ -91,6 +92,9 @@ class Profile extends Component {
 
     return (
       <PageLayout>
+        <Helmet>
+          <title>{`${profile.firstname} ${profile.lastname} - Author's Haven`}</title>
+        </Helmet>
         <div className="mt-16 profile-container mx-auto">
           <div className="flex flex-col lg:flex-row md:flex-row items-center lg:justify-start md:justify-start justify-center text-center">
             <div className="relative avatar-img">

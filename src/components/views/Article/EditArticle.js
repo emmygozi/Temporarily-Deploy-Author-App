@@ -65,14 +65,14 @@ class EditArticle extends Component {
   }
 
   editArticle = () => {
-    const { match: { params: {articleId} } } = this.props;
+    const { match: { params: {articleId} }, article } = this.props;
     const { editArticle, history } = this.props
     const { title } = this.state;
     this.editor.isReady
       .then(() => {
         this.editor.save().then((outputData) => {
           const values = {
-            title,
+            title: title || article.title,
             body: JSON.stringify(outputData),
           };
 
@@ -85,12 +85,16 @@ class EditArticle extends Component {
   }
 
   render() {
-    const { article } = this.props;
+    const { article, user, history } = this.props;
+    const { match: { params: {articleId} } } = this.props;
     const { title } = this.state;
     const body = this.getBodyObject(article.body);
-    
-    if (article.body) {
+
+    if (article.body && !this.editor) {
       this.editor = Editor(body);
+      if (article.author.id !== user.id) {
+        history.push(`/article/${articleId}`);
+      }
     }
 
     return (
