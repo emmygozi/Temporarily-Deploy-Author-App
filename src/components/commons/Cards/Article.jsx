@@ -138,7 +138,7 @@ function Article(props) {
           </p>
           <Link
             to={`/profile/${username}`}
-            className='mr-3 hover:text-blue-700'
+            className='mr-3 hover:text-blue-700 bold'
           >
             {fullName === ' ' ? username : fullName}
           </Link>
