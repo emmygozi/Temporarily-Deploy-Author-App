@@ -97,20 +97,21 @@ $base-color: #335bcf;
   border-bottom-color: #fff;
 	border-width: 6px;
 	left: 85%;
-	margin-left: -6px;
+  margin-left: -6px;
 }
 
 .more ul:before {
   border-bottom-color:#e2e8f0;
 	border-width: 7px;
 	left: 85%;
-	margin-left: -7px;
+  margin-left: -7px;
 }
 
 .more ul li {
   list-style: none;
   padding: 5px 10px;
   z-index: 400;
+  background: ghostwhite;
 }
 
 .ReactModal__Overlay--after-open {

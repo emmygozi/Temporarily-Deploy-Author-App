@@ -210,7 +210,7 @@ class SingleArticle extends PureComponent {
                   averageRating={rating ? rating : 0}
                 />
                 {isAuthenticated ? '' : (
-                  <p className="mt-3 text-xs blueish">
+                  <p className="mt-3 text-xs greyish">
                   Love this article? Sign in to rate or like
                   </p>
                 )}
@@ -224,7 +224,7 @@ class SingleArticle extends PureComponent {
             <Tags tags={tags} />
             <div className="mt-3 text-xs">
               {isAuthenticated ? <Rater total={5} rating={userRating || 0} onRate={this.rateArticle} interactive={isAuthenticated ? true : false} /> : (
-                <p className="blueish">
+                <p className="greyish">
                 Love this article? Sign in to rate
                 </p>
   )

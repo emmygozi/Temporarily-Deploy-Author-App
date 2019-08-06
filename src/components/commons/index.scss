@@ -220,13 +220,65 @@ button:disabled {
   cursor: pointer;
 }
 
-.sticky{
+.sticky {
   top: 0;
   width: 100%;
   transition: top 0.4s;
 }
 
-.notVisible{
+.slider-prev-arrow,
+.slider-next-arrow {
+  height: 97%;
+  padding: 8px;
+  font-size: 3.0em;
+  position: absolute;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+}
+
+.slider-image-icon {
+  font-size: 0.5em;
+  color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.slider-image-icon:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.slider-prev-arrow:hover,
+.slider-next-arrow:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.slider-next-arrow {
+  right: -18px;
+}
+
+.slider-prev-arrow {
+  left: -18px;
+}
+
+.slider-arrow-background-left,
+.slider-arrow-background-right {
+  background: rgba(247, 250, 252, 1);
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.slider-arrow-background-left {
+  left: -1px;
+}
+
+.slider-arrow-background-right {
+  right: -1px;
+}
+
+.notVisible {
   top: -70px !important;
 }
 
