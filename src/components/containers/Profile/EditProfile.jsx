@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Pagelayout from '@components/layout/PageLayout';
 import Button from '@components/commons/utilities/Button';
 import PropTypes from 'prop-types';
