@@ -177,6 +177,7 @@ class NewArticle extends Component {
                       tags={tags}
                       suggestions={suggestions}
                       delimiters={delimiters}
+                      maxLength="10"
                       handleDelete={this.handleDelete}
                       handleAddition={this.handleAddition}
                       handleDrag={this.handleDrag}

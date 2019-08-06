@@ -44,6 +44,11 @@ class EditProfile extends Component {
     });
   }
 
+  cancel = () => {
+    const { match: { params: { username } }, history } = this.props;
+    history.push(`/profile/${username}`);
+  }
+
   uploadImageCallBack = (file) => {
     const url = 'https://api.cloudinary.com/v1_1/druxgvyx3/image/upload';
     const formData = new FormData();
@@ -67,7 +72,7 @@ class EditProfile extends Component {
   }
 
   updateArticle = () => {
-    const { updateProfile } = this.props;
+    const { updateProfile, history, match: { params: { username } } } = this.props;
     const { firstname, lastname, avatar, bio, location, phone } = this.state;
     const values = {
       firstname,
@@ -77,7 +82,7 @@ class EditProfile extends Component {
       location,
       phone
     };
-    updateProfile(values);
+    updateProfile(values, username, history);
   }
 
   render() {
@@ -108,14 +113,13 @@ class EditProfile extends Component {
             </div>
           </div>
 
-          <h3 className="uppercase text-xl font-normal font-semibold my-4">Profile</h3>
           <div className="mt-4 profile-form">
             <form className="flex flex-col w-full" onSubmit={this.updateArticle}>
               <div className="my-4 relative mb-8 no-effect uppercase">
                 <label htmlFor="firstname" className="mb-16 text-sm">Firstname</label>
 
                 <input
-                  id={firstname}
+                  id="firstname"
                   type="text"
                   name="firstname"
                   className="w-full py-2 border-gray-600 border-b-2 outline-none"
@@ -126,7 +130,7 @@ class EditProfile extends Component {
                 <div className="text-red-600 text-xs text-left mt-1" />
               </div>
               <div className="my-4 relative mb-8 no-effect uppercase">
-                <label htmlFor="lastname" className="mb-16 text-sm">Firstname</label>
+                <label htmlFor="lastname" className="mb-16 text-sm">Lastname</label>
 
                 <input
                   id={lastname}
@@ -173,8 +177,8 @@ class EditProfile extends Component {
               </div>
 
               <div className="flex justify-center">
-                <Button type="outline" color="blue" className="hover:border-blue-700 hover:text-blue-700 border border-gray-300 px-4 py-2 rounded mr-8">Edit</Button>
-                <Button type="outline" color="red" className="hover:border-red-700 hover:text-red-700 border border-gray-300 px-4 py-2 rounded">Cancel</Button>
+                <Button type="outline" color="blue" className="hover:border-blue-700 hover:text-blue-700 border border-gray-300 px-4 py-2 rounded mr-8">Save</Button>
+                <button type="button" className="hover:border-red-700 hover:text-red-700 border border-gray-300 px-4 py-2 rounded" onClick={this.cancel}>Cancel</button>
               </div>
             </form>
           </div>
