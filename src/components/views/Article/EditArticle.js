@@ -38,11 +38,16 @@ class EditArticle extends Component {
   constructor(props) {
     super(props);
     this.title = React.createRef();
-    const { article } = this.props;
+    const { article: { title } } = this.props;
 
     this.state = {
-      title: `${article.title}`,
+      title: title,
     };
+  }
+
+  componentDidMount() {
+    const { getSingleArticle, match: { params: { articleId } } } = this.props;
+    getSingleArticle(articleId);
   }
 
   onChange = (e) => {
@@ -81,9 +86,10 @@ class EditArticle extends Component {
 
   render() {
     const { article } = this.props;
+    const { title } = this.state;
     const body = this.getBodyObject(article.body);
     
-    if (!this.editor) {
+    if (article.body) {
       this.editor = Editor(body);
     }
 
@@ -100,6 +106,7 @@ class EditArticle extends Component {
             className="textarea"
             name="title"
             defaultValue={article.title}
+            value={title}
             onChange={this.onChange}
             placeholder="Title"
             maxLength="50"

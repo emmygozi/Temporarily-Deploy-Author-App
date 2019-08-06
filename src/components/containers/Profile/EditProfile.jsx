@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import Pagelayout from '@components/layout/PageLayout';
 import Button from '@components/commons/utilities/Button';
 import PropTypes from 'prop-types';
@@ -40,6 +40,10 @@ class EditProfile extends Component {
     this.setState({
       [name]: value
     });
+  }
+
+  cancel = () => {
+    return Redirect
   }
 
   uploadImageCallBack = (file) => {
@@ -113,7 +117,7 @@ class EditProfile extends Component {
                 <label htmlFor="firstname" className="mb-16 text-sm">Firstname</label>
 
                 <input
-                  id={firstname}
+                  id="firstname"
                   type="text"
                   name="firstname"
                   className="w-full py-2 border-gray-600 border-b-2 outline-none"
@@ -124,7 +128,7 @@ class EditProfile extends Component {
                 <div className="text-red-600 text-xs text-left mt-1" />
               </div>
               <div className="my-4 relative mb-8 no-effect uppercase">
-                <label htmlFor="lastname" className="mb-16 text-sm">Firstname</label>
+                <label htmlFor="lastname" className="mb-16 text-sm">Lastname</label>
 
                 <input
                   id={lastname}
@@ -171,8 +175,8 @@ class EditProfile extends Component {
               </div>
 
               <div className="flex justify-center">
-                <Button type="outline" color="blue" className="hover:border-blue-700 hover:text-blue-700 border border-gray-300 px-4 py-2 rounded mr-8">Edit</Button>
-                <Button type="outline" color="red" className="hover:border-red-700 hover:text-red-700 border border-gray-300 px-4 py-2 rounded">Cancel</Button>
+                <Button type="outline" color="blue" className="hover:border-blue-700 hover:text-blue-700 border border-gray-300 px-4 py-2 rounded mr-8">Save</Button>
+                <button type="button" className="hover:border-red-700 hover:text-red-700 border border-gray-300 px-4 py-2 rounded" onClick={this.cancel}>Cancel</button>
               </div>
             </form>
           </div>

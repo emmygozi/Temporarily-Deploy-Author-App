@@ -25,6 +25,11 @@ const customStyles = {
     transform             : 'translate(-50%, -50%)'
   }
 };
+
+const truncate = (str, no_words) => {
+  return str.split(" ").splice(0,no_words).join(" ");
+};
+
 class Profile extends Component {
   static propTypes = {
     match: PropTypes.shape({
@@ -70,7 +75,7 @@ class Profile extends Component {
     const { match: { params: { username } }, user, profile, articles } = this.props;
     const { showModal } = this.state;
     const { firstname, lastname } = profile;
-    const fullname = `${firstname || ''} ${lastname || ''}`;
+    // const fullname = `${firstname || ''} ${lastname || ''}`;
 
     if (!profile.userId) {
       return (
@@ -92,7 +97,7 @@ class Profile extends Component {
               <img src={profile.avatar || this.defaultAvatar} alt="Profile" className="shadow-lg rounded-full w-32 h-32 flex justify-center" />
             </div>
             <div className="lg:ml-8 md:ml-8 flex flex-col lg:justify-start md:justify-start justify-center">
-              <h2 className="text-3xl font-lobster text-black font-bold tracking-widest">{fullname === ' ' || 'John Doe'}</h2>
+              <h2 className="text-3xl font-lobster text-black font-bold tracking-widest">{`${firstname} ${lastname}`}</h2>
               <div className="block mx-auto">
                 {user.id === profile.userId && <Link to={`/profile/${username}/edit`} className="border py-1 px-2 mt-4 text-sm rounded text-blue-700 border-blue-700">Edit Profile</Link>}
               </div>
@@ -113,7 +118,7 @@ class Profile extends Component {
                       <h2 className="font-semibold">Firstname</h2>
                       <h2>{profile.firstname}</h2>
                     </div>
-                    <div className="flex jjustify-between mb-4">
+                    <div className="flex justify-between mb-4">
                       <h2 className="font-semibold">Lastname</h2>
                       <h2>{profile.lastname}</h2>
                     </div>
@@ -196,7 +201,7 @@ class Profile extends Component {
                         
                         <div className="">
                           <Link to={`/article/${article.slug}`} className="font-sans text-3xl text-black font-semibold leading-tight">{article.title}</Link>
-                          <h4 className="font-serif text-lg leading-normal profile-article-desc font-thin text-gray-800 mt-2">{body}</h4>
+                          <h4 className="font-serif text-lg leading-normal profile-article-desc font-thin text-gray-800 mt-2">{truncate(body, 50)}</h4>
                         </div>
                       </div>
                     </div>

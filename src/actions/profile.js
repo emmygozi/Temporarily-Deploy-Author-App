@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { setUserProfile } from '@actions/auth';
 import {
   PROFILE_LOADING,
   FETCH_PROFILE_SUCCESS,
@@ -77,6 +78,7 @@ export const updateProfile = (values) => async (dispatch) => {
 
     const response = await axios.put('/users', values);
     dispatch(updateProfileSuccess(response.data.payload));
+    dispatch(setUserProfile(response.data.payload));
     toast.success('Profile Updated!');
   } catch (error) {
     dispatch(updateProfileFailure(error.response.data.errors));
