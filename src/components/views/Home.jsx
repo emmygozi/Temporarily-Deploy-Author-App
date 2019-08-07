@@ -84,13 +84,13 @@ class Home extends Component {
         <p className='text-gray-600 h-10 overflow-hidden'>
           {body.length > 240 ? `${body.slice(0, 240)}...` : body}
         </p>
-        <Link to={`/profile/${username}`} className='mr-3 hover:text-blue-700'>
+        <Link to={`/profile/${username}`} className='mr-3 hover:text-blue-700 bold'>
           {fullName === ' ' ? username : fullName}
         </Link>
         <div className='font-thin text-gray-600 text-xs'>
           <span>{time}</span>
           <span className='mx-2 text-black font-bold'>.</span>
-          <span>{`${readTime} read`}</span>
+          <span className='italic'>{`${readTime} read`}</span>
         </div>
       </div>
     );

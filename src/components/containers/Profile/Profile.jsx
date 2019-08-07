@@ -101,7 +101,7 @@ class Profile extends Component {
               <img src={profile.avatar || this.defaultAvatar} alt="Profile" className="shadow-lg rounded-full w-32 h-32 flex justify-center" />
             </div>
             <div className="lg:ml-8 md:ml-8 flex flex-col lg:justify-start md:justify-start justify-center">
-              <h2 className="text-3xl font-lobster text-black font-bold tracking-widest">{`${firstname} ${lastname}`}</h2>
+              <h2 className="text-3xl font-lobster text-black font-bold tracking-widest capitalize">{`${firstname} ${lastname}`}</h2>
               <div className="block mx-auto">
                 {user.id === profile.userId && <Link to={`/profile/${username}/edit`} className="border py-1 px-2 mt-4 text-sm rounded text-blue-700 border-blue-700">Edit Profile</Link>}
               </div>
@@ -120,11 +120,11 @@ class Profile extends Component {
                   <div className="profile-extra">
                     <div className="flex flex-row justify-between mb-4">
                       <h2 className="font-semibold">Firstname</h2>
-                      <h2>{profile.firstname}</h2>
+                      <h2 className="capitalize">{profile.firstname}</h2>
                     </div>
                     <div className="flex justify-between mb-4">
                       <h2 className="font-semibold">Lastname</h2>
-                      <h2>{profile.lastname}</h2>
+                      <h2 className="capitalize">{profile.lastname}</h2>
                     </div>
                     <div className="flex justify-between mb-4">
                       <h2 className="font-semibold">Bio</h2>
@@ -136,7 +136,7 @@ class Profile extends Component {
                     </div>
                     <div className="flex justify-between mb-4">
                       <h2 className="font-semibold">Location</h2>
-                      <h2>{profile.location}</h2>
+                      <h2 className="capitalize">{profile.location}</h2>
                     </div>
                   </div>
                 </div>
