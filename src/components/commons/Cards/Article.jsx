@@ -145,7 +145,7 @@ function Article(props) {
           <div className='flex font-thin text-gray-600 text-xs'>
             <p>{time}</p>
             <span className='mx-2 mb-3 text-black font-bold'>.</span>
-            <p>{`${readTime} read`}</p>
+            <p className='italic'>{`${readTime} read`}</p>
           </div>
         </div>
       </div>

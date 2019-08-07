@@ -286,10 +286,10 @@ export class Header extends Component {
                       className='rounded-full w-10 h-10 mx-auto md:mx-0 lg:mx-0'
                     />
                     <div className='ml-0 md:ml-4 lg:ml-4 md:text-left lg:text-left text-center hover:text-blue-700'>
-                      <div className='font-bold text-base'>
+                      <div className='font-bold text-base capitalize'>
                         {`${firstname || ''} ${lastname || ''}`}
                       </div>
-                      <div className='text-gray-500'>{`@ ${username}`}</div>
+                      <div className='text-gray-500'>{`@${username}`}</div>
                     </div>
                   </div>
                 </Link>
